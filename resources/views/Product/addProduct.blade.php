@@ -1,6 +1,21 @@
 @include('layouts.header')
 
 <div class="container-fluid pt-4">
+    @if (session('error'))
+        <div class="alert alert-danger" style="border-radius: 0;" role="alert">
+            {{ session('error') }}
+        </div>
+    @endif
+    @if (!$errors->isEmpty())
+        <div class="alert alert-danger" style="border-radius: 0;" role="alert">
+            {{ $errors->first() }}
+        </div>
+    @endif
+    @if (session('success'))
+        <div class="alert alert-success" style="border-radius: 0;" role="alert">
+            {{ session('success') }}
+        </div>
+    @endif
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card shadow-sm">
@@ -12,24 +27,24 @@
                         @csrf
                         <div class="form-group">
                             <label for="productName">Product Name</label>
-                            <input type="text" class="form-control" id="productName" name="name">
+                            <input type="text" class="form-control" id="productName" value="{{old('name')}}" name="name">
                         </div>
                         <div class="form-group">
                             <label for="initialStock">Initial Stock</label>
-                            <input type="number" class="form-control" id="initialStock" name="stock">
+                            <input type="number" class="form-control" id="initialStock" value="{{old('stock')}}" name="stock">
                         </div>
                         <div class="form-group">
                             <label for="description">Description</label>
-                            <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+                            <textarea class="form-control" id="description" value="{{old('description')}}" name="description" rows="3"></textarea>
                         </div>
                         <div class="form-group">
                             <label for="price">Price</label>
-                            <input type="text" class="form-control" id="price" name="price">
+                            <input type="text" class="form-control" id="price" value="{{old('price')}}" name="price">
                         </div>
                         <div class="form-group">
                             <label for="category">Category</label>
                             <select class="form-control" id="category" name="category">
-                                <option value="" disabled selected>Select a category</option>
+                                <option value="{{old('category')}}" disabled selected>Select a category</option>
                                 @foreach($categories as $category)
                                     <option value="{{ $category->id }}">{{ $category->categoryName }}</option>
                                 @endforeach

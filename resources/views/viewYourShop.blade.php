@@ -2,9 +2,19 @@
 
 
 <div class="container-fluid pb-5">
-    @if(session('success'))
-        <div class="alert alert-success">
-            {{session('success')}}
+    @if (session('error'))
+        <div class="alert alert-danger" style="border-radius: 0;" role="alert">
+            {{ session('error') }}
+        </div>
+    @endif
+    @if (!$errors->isEmpty())
+        <div class="alert alert-danger" style="border-radius: 0;" role="alert">
+            {{ $errors->first() }}
+        </div>
+    @endif
+    @if (session('success'))
+        <div class="alert alert-success" style="border-radius: 0;" role="alert">
+            {{ session('success') }}
         </div>
     @endif
     <div class="row px-xl-5">
@@ -163,7 +173,8 @@
                     @foreach ($products as $product)
                     <div class="product-item bg-light"> {{-- one picture --}}
                         <div class="product-img position-relative overflow-hidden">
-                            <img class="img-fluid w-100" src="{{asset( $product->images->first()->imagePath)}}" alt="">
+                            <img class="img-fluid w-100" src="{{ $product->images->isNotEmpty() && $product->images->first()->imagePath != null ? asset($product->images->first()->imagePath) : asset('img/defaultProduct.png') }}"
+                            alt="Product Image">
                             <div class="product-action">
                                 <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-shopping-cart"></i></a>
                                 <a class="btn btn-outline-dark btn-square" href=""><i class="far fa-heart"></i></a>

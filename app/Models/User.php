@@ -52,7 +52,6 @@ class User extends Authenticatable
         return $this->hasMany(Shop::class);
     }
 
-
     public function hasRole($roles)
     {
         return null !== $this->role()->whereIn('roleName', (array) $roles)->first();

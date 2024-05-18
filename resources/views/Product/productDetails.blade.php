@@ -1,17 +1,18 @@
     @include('layouts.header')
 
-    <!-- Shop Detail Start -->
+    <!-- Product Detail Start -->
     <div class="container-fluid pb-5">
         <div class="row px-xl-5">
             <div class="col-lg-5 mb-30">
                 <div id="product-carousel" class="carousel slide" data-ride="carousel">
                     <div class="carousel-inner bg-light">
-                        @foreach ($product->images as $index => $image)
+                        @foreach ($product->images->isNotEmpty() ? $product->images : [null] as $index => $image)
                             <div class="carousel-item {{ $index == 0 ? 'active' : '' }}">
-                                <img class="d-block w-100" src="{{ asset($image->imagePath) }}" alt="Image">
+                                <img class="d-block w-100"
+                                    src="{{ $image ? asset($image->imagePath) : asset('img/defaultProduct.png') }}"
+                                    alt="Image">
                             </div>
                         @endforeach
-
                     </div>
                     <a class="carousel-control-prev" href="#product-carousel" data-slide="prev">
                         <i class="fa fa-2x fa-angle-left text-dark"></i>
@@ -37,6 +38,7 @@
                     </div>
                     <h3 class="font-weight-semi-bold mb-4">Php{{ $product->price }}</h3>
                     <p class="mb-4">{{ $product->description }}</p>
+                    <p class="mb-4">Stock: {{ $product->stock }} pieces</p>
 
                     <div class="d-flex align-items-center mb-4 pt-2">
                         <div class="input-group quantity mr-3" style="width: 130px;">
@@ -163,8 +165,9 @@
                     @foreach ($featured as $product)
                         <div class="product-item bg-light"> {{-- one picture --}}
                             <div class="product-img position-relative overflow-hidden">
-                                <img class="img-fluid w-100" src="{{ asset($product->images->first()->imagePath) }}"
-                                    alt="">
+                                <img class="img-fluid w-100"
+                                    src="{{ $product->images->isNotEmpty() && $product->images->first()->imagePath != null ? asset($product->images->first()->imagePath) : asset('img/defaultProduct.png') }}"
+                                    alt="Product Image">
                                 <div class="product-action">
                                     <a class="btn btn-outline-dark btn-square" href=""><i
                                             class="fa fa-shopping-cart"></i></a>
@@ -178,7 +181,7 @@
                             </div>
                             <div class="text-center py-4">
                                 <a class="h6 text-decoration-none text-truncate"
-                                    href="">{{ $product->name }}</a>
+                                    href="/productDetails/{{$product->id}}">{{ $product->name }}</a>
                                 <div class="d-flex align-items-center justify-content-center mt-2">
                                     <h5>Php{{ $product->price }}</h5>
                                     <h6 class="text-muted ml-2"></h6>

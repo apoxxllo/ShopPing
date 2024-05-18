@@ -82,6 +82,7 @@ class ProductController extends Controller
             }
         }
 
+        // return redirect('productDetails', $product->id);
         return redirect()->route('viewYourShop', $id)->with('success', 'Product created successfully!');
 
     }

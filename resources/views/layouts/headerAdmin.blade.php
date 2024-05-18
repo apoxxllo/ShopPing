@@ -251,7 +251,7 @@
                 <ul class="metismenu" id="menu">
                     <li class="nav-label">Dashboard</li>
                     <li>
-                        <a href="index.php" aria-expanded="false">
+                        <a href="{{route('adminDashboard')}}" aria-expanded="false">
                             <i class="icon-speedometer menu-icon"></i><span class="nav-text">Dashboard</span>
                         </a>
                     </li>
@@ -260,12 +260,31 @@
                             <i class="icon-globe-alt menu-icon"></i><span class="nav-text">Management</span>
                         </a>
                         <ul aria-expanded="false">
-                            <?php $page = $_SERVER["PHP_SELF"] ?>
-                            <li><a style="<?= $page == '/CCSLibraryManagementSystem/staff/authors.php' ? 'background-color: #bebdb6; color: white; border-radius: 5px; margin-left: 10px; padding-left: 10px;' : '' ?>" href="authors.php">Products</a></li>
-                            <li><a style="<?= $page == '/CCSLibraryManagementSystem/staff/categories.php' ? 'background-color: #bebdb6; color: white;  border-radius: 5px; margin-left: 10px; padding-left: 10px;' : '' ?>" href="categories.php">Categories</a></li>
-                            <li><a style="<?= $page == '/CCSLibraryManagementSystem/staff/books.php' ? 'background-color: #bebdb6; color: white;  border-radius: 5px; margin-left: 10px; padding-left: 10px;' : '' ?>" href="books.php">Users</a></li>
-                            <li><a style="<?= $page == '/CCSLibraryManagementSystem/staff/fines.php' ? 'background-color: #bebdb6; color: white;  border-radius: 5px; margin-left: 10px; padding-left: 10px;' : '' ?>" href="fines.php">Shops</a></li>
-                            {{-- <li><a style="<?= $page == '/CCSLibraryManagementSystem/staff/borrowStatus.php' ? 'background-color: color: white;  #bebdb6; border-radius: 5px; margin-left: 10px; padding-left: 10px;' : '' ?>" href="borrowStatus.php">Borrowing Status</a></li> --}}
+                            <li>
+                                <a href="{{ route('productsAdmin') }}"
+                                   style="{{ Route::currentRouteName() == 'productsAdmin' ? 'background-color: #bebdb6; color: white; border-radius: 5px; margin-left: 10px; padding-left: 10px;' : '' }}">
+                                   Products
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('categoriesAdmin') }}"
+                                   style="{{ Route::currentRouteName() == 'categoriesAdmin' ? 'background-color: #bebdb6; color: white; border-radius: 5px; margin-left: 10px; padding-left: 10px;' : '' }}">
+                                   Categories
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('usersAdmin') }}"
+                                   style="{{ Route::currentRouteName() == 'usersAdmin' ? 'background-color: #bebdb6; color: white; border-radius: 5px; margin-left: 10px; padding-left: 10px;' : '' }}">
+                                   Users
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('shopsAdmin') }}"
+                                   style="{{ Route::currentRouteName() == 'shopsAdmin' ? 'background-color: #bebdb6; color: white; border-radius: 5px; margin-left: 10px; padding-left: 10px;' : '' }}">
+                                   Shops
+                                </a>
+                            </li>
+                                                        {{-- <li><a style="<?= $page == '/CCSLibraryManagementSystem/staff/borrowStatus.php' ? 'background-color: color: white;  #bebdb6; border-radius: 5px; margin-left: 10px; padding-left: 10px;' : '' ?>" href="borrowStatus.php">Borrowing Status</a></li> --}}
                         </ul>
                     </li>
 

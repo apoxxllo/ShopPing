@@ -16,6 +16,7 @@ Route::get('/contact', [HomeController::class, 'contact'])->name('contact');
 Route::get('/cart', [HomeController::class, 'cart'])->name('cart')->middleware(['auth', 'verified']);
 Route::get('/checkout', [HomeController::class, 'checkout'])->name('checkout')->middleware(['auth', 'verified']);
 Route::get('/setupSeller', [HomeController::class, 'setupSeller'])->name('setupSeller')->middleware(['auth', 'verified']);
+Route::get('/viewCategory/{id}', [HomeController::class, 'viewCategory'])->name('viewCategory')->middleware(['auth', 'verified']);
 
 
 // PRODUCT CONTROLLER ROUTES
@@ -41,8 +42,27 @@ Route::get('/viewYourShop/{id}', [ShopController::class, 'viewYourShop'])->name(
 // ADMIN CONTROLLER ROUTES
 Route::get('/admin', [AdminController::class, 'index']) ->name('adminDashboard')
     ->middleware(['auth', 'verified', AdminRole::class]);
+Route::get('/productsAdmin', [AdminController::class, 'products']) ->name('productsAdmin')
+    ->middleware(['auth', 'verified', AdminRole::class]);
+Route::get('/categoriesAdmin', [AdminController::class, 'categories']) ->name('categoriesAdmin')
+    ->middleware(['auth', 'verified', AdminRole::class]);
+Route::get('/usersAdmin', [AdminController::class, 'users']) ->name('usersAdmin')
+    ->middleware(['auth', 'verified', AdminRole::class]);
+Route::get('/shopsAdmin', [AdminController::class, 'shops']) ->name('shopsAdmin')
+    ->middleware(['auth', 'verified', AdminRole::class]);
 
-
+Route::post('/addCategory', [AdminController::class, 'addCategory']) ->name('addCategory')
+    ->middleware(['auth', 'verified', AdminRole::class]);
+Route::post('/addProductAdmin', [AdminController::class, 'addProductAdmin']) ->name('addProductAdmin')
+    ->middleware(['auth', 'verified', AdminRole::class]);
+Route::post('/deleteCategory', [AdminController::class, 'deleteCategory']) ->name('deleteCategory')
+    ->middleware(['auth', 'verified', AdminRole::class]);
+Route::post('/deleteProduct', [AdminController::class, 'deleteProduct']) ->name('deleteProduct')
+    ->middleware(['auth', 'verified', AdminRole::class]);
+Route::post('/updateProductAdmin', [AdminController::class, 'updateProductAdmin']) ->name('updateProductAdmin')
+    ->middleware(['auth', 'verified', AdminRole::class]);
+Route::post('/updateCategory', [AdminController::class, 'updateCategory']) ->name('updateCategory')
+    ->middleware(['auth', 'verified', AdminRole::class]);
 // Route::get('/', function () {
 //     return view('landing');
 // })->name('landing');

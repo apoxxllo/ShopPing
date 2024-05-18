@@ -50,13 +50,14 @@ class ShopController extends Controller
     {
         $shop = Shop::find($id);
         $categories = Category::all();
-        return view('viewShop')->with('shop', $shop)->with('categories', $categories);
+        $products = Product::where('shop_id', $id)->get();
+        return view('viewShop')->with('shop', $shop)->with('categories', $categories)->with('products', $products);
     }
     public function viewYourShop($id)
     {
         $user = User::findOrFail(Auth::user()->id);
         $shop = $user->shops()->where('id', $id)->get();
-        if($shop == null){
+        if($shop->isEmpty()){
             return redirect(route('yourShops'))->with('error', 'No shop found');
         }
         // print_r($shop);

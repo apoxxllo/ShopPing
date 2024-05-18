@@ -80,19 +80,21 @@
     <h2 class="section-title position-relative text-uppercase mx-xl-5 mb-4"><span
             class="bg-secondary pr-3">Categories</span></h2>
     <div class="row px-xl-5 pb-3">
-        <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
-            <a class="text-decoration-none" href="">
-                <div class="cat-item d-flex align-items-center mb-4">
-                    <div class="overflow-hidden" style="width: 100px; height: 100px;">
-                        <img class="img-fluid" src="img/cat-1.jpg" alt="">
+        @foreach ($categories as $category)
+            <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
+                <a class="text-decoration-none" href="">
+                    <div class="cat-item d-flex align-items-center mb-4">
+                        <div class="overflow-hidden" style="width: 100px; height: 100px;">
+                            <img class="img-fluid" src="{{ asset($category->imagePath) }}" alt="">
+                        </div>
+                        <div class="flex-fill pl-3">
+                            <h6>{{ $category->categoryName }}</h6>
+                            <small class="text-body"> {{$category->products_count}} Products</small>
+                        </div>
                     </div>
-                    <div class="flex-fill pl-3">
-                        <h6>Category Name</h6>
-                        <small class="text-body">100 Products</small>
-                    </div>
-                </div>
-            </a>
-        </div>
+                </a>
+            </div>
+        @endforeach
     </div>
 </div>
 <!-- Categories End -->
@@ -103,35 +105,43 @@
     <h2 class="section-title position-relative text-uppercase mx-xl-5 mb-4"><span class="bg-secondary pr-3">Featured
             Products</span></h2>
     <div class="row px-xl-5">
-        <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
-            <div class="product-item bg-light mb-4">
-                <div class="product-img position-relative overflow-hidden">
-                    <img class="img-fluid w-100" src="img/product-1.jpg" alt="">
-                    <div class="product-action">
-                        <a class="btn btn-outline-dark btn-square" href=""><i
-                                class="fa fa-shopping-cart"></i></a>
-                        <a class="btn btn-outline-dark btn-square" href=""><i class="far fa-heart"></i></a>
-                        <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-sync-alt"></i></a>
-                        <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-search"></i></a>
+        @foreach ($featuredProducts as $product)
+            <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
+                <div class="product-item bg-light mb-4">
+                    <div class="product-img position-relative overflow-hidden">
+                        <img class="img-fluid w-100" src="{{ $product->images->isNotEmpty() && $product->images->first()->imagePath != null ? asset($product->images->first()->imagePath) : asset('img/defaultProduct.png') }}"
+                        alt="Product Image">
+                        {{-- <img class="img-fluid w-100" src="{{ asset($product->images->first()->imagePath) }}"
+                            alt=""> --}}
+                        <div class="product-action">
+                            <a class="btn btn-outline-dark btn-square" href=""><i
+                                    class="fa fa-shopping-cart"></i></a>
+                            <a class="btn btn-outline-dark btn-square" href=""><i class="far fa-heart"></i></a>
+                            <a class="btn btn-outline-dark btn-square" href=""><i
+                                    class="fa fa-sync-alt"></i></a>
+                            <a class="btn btn-outline-dark btn-square" href=""><i
+                                    class="fa fa-search"></i></a>
+                        </div>
                     </div>
-                </div>
-                <div class="text-center py-4">
-                    <a class="h6 text-decoration-none text-truncate" href="">Product Name Goes Here</a>
-                    <div class="d-flex align-items-center justify-content-center mt-2">
-                        <h5>$123.00</h5>
-                        <h6 class="text-muted ml-2"><del>$123.00</del></h6>
-                    </div>
-                    <div class="d-flex align-items-center justify-content-center mb-1">
-                        <small class="fa fa-star text-primary mr-1"></small>
-                        <small class="fa fa-star text-primary mr-1"></small>
-                        <small class="fa fa-star text-primary mr-1"></small>
-                        <small class="fa fa-star text-primary mr-1"></small>
-                        <small class="fa fa-star text-primary mr-1"></small>
-                        <small>(99)</small>
+                    <div class="text-center py-4">
+                        <a class="h6 text-decoration-none text-truncate"
+                            href="/productDetails/{{ $product->id }}">{{ $product->name }}</a>
+                        <div class="d-flex align-items-center justify-content-center mt-2">
+                            <h5>Php {{ $product->price }}</h5>
+                            <h6 class="text-muted ml-2"><del>{{ $product->price }}</del></h6>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-center mb-1">
+                            <small class="fa fa-star text-primary mr-1"></small>
+                            <small class="fa fa-star text-primary mr-1"></small>
+                            <small class="fa fa-star text-primary mr-1"></small>
+                            <small class="fa fa-star text-primary mr-1"></small>
+                            <small class="fa fa-star text-primary mr-1"></small>
+                            <small>(98)</small>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        @endforeach
 
     </div>
 </div>
@@ -171,35 +181,42 @@
     <h2 class="section-title position-relative text-uppercase mx-xl-5 mb-4"><span class="bg-secondary pr-3">Recent
             Products</span></h2>
     <div class="row px-xl-5">
-        <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
-            <div class="product-item bg-light mb-4">
-                <div class="product-img position-relative overflow-hidden">
-                    <img class="img-fluid w-100" src="img/product-1.jpg" alt="">
-                    <div class="product-action">
-                        <a class="btn btn-outline-dark btn-square" href=""><i
-                                class="fa fa-shopping-cart"></i></a>
-                        <a class="btn btn-outline-dark btn-square" href=""><i class="far fa-heart"></i></a>
-                        <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-sync-alt"></i></a>
-                        <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-search"></i></a>
+        @foreach ($recentProducts as $product)
+            <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
+                <div class="product-item bg-light mb-4">
+                    <div class="product-img position-relative overflow-hidden">
+                        <img class="img-fluid w-40" src="{{ $product->images->isNotEmpty() && $product->images->first()->imagePath != null ? asset($product->images->first()->imagePath) : asset('img/defaultProduct.png') }}"
+                        alt="Product Image">
+                        <div class="product-action">
+                            <a class="btn btn-outline-dark btn-square" href=""><i
+                                    class="fa fa-shopping-cart"></i></a>
+                            <a class="btn btn-outline-dark btn-square" href=""><i
+                                    class="far fa-heart"></i></a>
+                            <a class="btn btn-outline-dark btn-square" href=""><i
+                                    class="fa fa-sync-alt"></i></a>
+                            <a class="btn btn-outline-dark btn-square" href=""><i
+                                    class="fa fa-search"></i></a>
+                        </div>
                     </div>
-                </div>
-                <div class="text-center py-4">
-                    <a class="h6 text-decoration-none text-truncate" href="">Product Name Goes Here</a>
-                    <div class="d-flex align-items-center justify-content-center mt-2">
-                        <h5>$123.00</h5>
-                        <h6 class="text-muted ml-2"><del>$123.00</del></h6>
-                    </div>
-                    <div class="d-flex align-items-center justify-content-center mb-1">
-                        <small class="fa fa-star text-primary mr-1"></small>
-                        <small class="fa fa-star text-primary mr-1"></small>
-                        <small class="fa fa-star text-primary mr-1"></small>
-                        <small class="fa fa-star text-primary mr-1"></small>
-                        <small class="fa fa-star text-primary mr-1"></small>
-                        <small>(99)</small>
+                    <div class="text-center py-4">
+                        <a class="h6 text-decoration-none text-truncate"
+                            href="/productDetails/{{ $product->id }}">{{ $product->name }}</a>
+                        <div class="d-flex align-items-center justify-content-center mt-2">
+                            <h5>{{ $product->price }}</h5>
+                            <h6 class="text-muted ml-2"><del>{{ $product->price }}</del></h6>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-center mb-1">
+                            <small class="fa fa-star text-primary mr-1"></small>
+                            <small class="fa fa-star text-primary mr-1"></small>
+                            <small class="fa fa-star text-primary mr-1"></small>
+                            <small class="fa fa-star text-primary mr-1"></small>
+                            <small class="fa fa-star text-primary mr-1"></small>
+                            <small>(99)</small>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        @endforeach
 
     </div>
 </div>
@@ -211,30 +228,11 @@
     <div class="row px-xl-5">
         <div class="col">
             <div class="owl-carousel vendor-carousel">
-                <div class="bg-light p-4">
-                    <img src="img/vendor-1.jpg" alt="">
-                </div>
-                <div class="bg-light p-4">
-                    <img src="img/vendor-2.jpg" alt="">
-                </div>
-                <div class="bg-light p-4">
-                    <img src="img/vendor-3.jpg" alt="">
-                </div>
-                <div class="bg-light p-4">
-                    <img src="img/vendor-4.jpg" alt="">
-                </div>
-                <div class="bg-light p-4">
-                    <img src="img/vendor-5.jpg" alt="">
-                </div>
-                <div class="bg-light p-4">
-                    <img src="img/vendor-6.jpg" alt="">
-                </div>
-                <div class="bg-light p-4">
-                    <img src="img/vendor-7.jpg" alt="">
-                </div>
-                <div class="bg-light p-4">
-                    <img src="img/vendor-8.jpg" alt="">
-                </div>
+                @foreach ($shops as $shop)
+                    <div class="bg-light p-4">
+                        <img src="{{ asset($shop->shopLogo) }}" alt="">
+                    </div>
+                @endforeach
             </div>
         </div>
     </div>
