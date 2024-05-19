@@ -1,5 +1,5 @@
     <!-- Contact Start -->
-    @include('layouts.header', ['categories' => $categories])
+    @include('layouts.header', ['categories' => $categories, 'cartCount' => $cartCount])
 
     <div class="container-fluid">
         <h2 class="section-title position-relative text-uppercase mx-xl-5 mb-4"><span class="bg-secondary pr-3">Contact
@@ -10,12 +10,12 @@
                     <div id="success"></div>
                     <form name="sentMessage" id="contactForm" novalidate="novalidate">
                         <div class="control-group">
-                            <input type="text" class="form-control" id="name" placeholder="Your Name"
+                            <input type="text" class="form-control" readonly value="{{Auth::user()->firstName}} {{Auth::user()->lastName}}" id="name" placeholder="Your Name"
                                 required="required" data-validation-required-message="Please enter your name" />
                             <p class="help-block text-danger"></p>
                         </div>
                         <div class="control-group">
-                            <input type="email" class="form-control" id="email" placeholder="Your Email"
+                            <input type="email" readonly class="form-control" value="{{Auth::user()->email}}" id="email" placeholder="Your Email"
                                 required="required" data-validation-required-message="Please enter your email" />
                             <p class="help-block text-danger"></p>
                         </div>

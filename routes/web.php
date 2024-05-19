@@ -2,6 +2,7 @@
 
 use App\Http\Middleware\AdminRole;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\AdminController;
@@ -17,6 +18,12 @@ Route::get('/cart', [HomeController::class, 'cart'])->name('cart')->middleware([
 Route::get('/checkout', [HomeController::class, 'checkout'])->name('checkout')->middleware(['auth', 'verified']);
 Route::get('/setupSeller', [HomeController::class, 'setupSeller'])->name('setupSeller')->middleware(['auth', 'verified']);
 Route::get('/viewCategory/{id}', [HomeController::class, 'viewCategory'])->name('viewCategory')->middleware(['auth', 'verified']);
+
+// CART CONTROLLER ROUTES
+Route::post('/addToCart', [CartController::class, 'addToCart'])->name('addToCart')->middleware(['auth', 'verified']);
+Route::post('/addOne', [CartController::class, 'addOne'])->name('addOne')->middleware(['auth', 'verified']);
+Route::post('/deductOne', [CartController::class, 'deductOne'])->name('deductOne')->middleware(['auth', 'verified']);
+Route::post('/removeFromCart', [CartController::class, 'removeFromCart'])->name('removeFromCart')->middleware(['auth', 'verified']);
 
 
 // PRODUCT CONTROLLER ROUTES
@@ -63,6 +70,9 @@ Route::post('/updateProductAdmin', [AdminController::class, 'updateProductAdmin'
     ->middleware(['auth', 'verified', AdminRole::class]);
 Route::post('/updateCategory', [AdminController::class, 'updateCategory']) ->name('updateCategory')
     ->middleware(['auth', 'verified', AdminRole::class]);
+Route::post('/addUser', [AdminController::class, 'addUser']) ->name('addUser')
+    ->middleware(['auth', 'verified', AdminRole::class]);
+
 // Route::get('/', function () {
 //     return view('landing');
 // })->name('landing');

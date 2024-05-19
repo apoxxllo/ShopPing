@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Validation\Rules;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Shop;
 use App\Models\User;
 use App\Models\Product;
@@ -139,7 +142,6 @@ class AdminController extends Controller
     }
 
 
-
     // CRUD PRODUCT
     public function addProductAdmin(Request $request)
     {
@@ -268,5 +270,27 @@ class AdminController extends Controller
             // Handle any errors, such as the category not found
             return redirect()->back()->with('error', 'Failed to delete product: ' . $e->getMessage());
         }
+    }
+
+    // CRUD USERS
+    public function addUser(Request $request)
+    {
+        $request->validate([
+            'username' => ['required', 'string', 'max:255', 'unique:users,username'],
+            'firstName' => ['string', 'max:255'],
+            'lastName' => ['string', 'max:255'],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+            'password' => ['required', Rules\Password::defaults()],
+        ]);
+
+        $user = User::create([
+            'username' => $request->username,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'firstName' =>$request->firstName,
+            'lastName' =>$request->lastName
+        ]);
+
+        return redirect()->back()->with('success', 'User created successfully!');
     }
 }

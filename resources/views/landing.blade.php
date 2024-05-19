@@ -1,7 +1,17 @@
-@include('layouts.header', ['categories' => $categories])
+@include('layouts.header', ['categories' => $categories, 'cartCount' => $cartCount])
 
 <!-- Carousel Start -->
 <div class="container-fluid mb-3">
+    @if (session('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
+    @endif
+    @if (session('error'))
+        <div class="alert alert-danger">
+            {{ session('error') }}
+        </div>
+    @endif
     <div class="row px-xl-5">
         <div class="col-lg-8">
             <div id="header-carousel" class="carousel slide carousel-fade mb-30 mb-lg-0" data-ride="carousel">
@@ -22,7 +32,7 @@
                                         {{ $category->categoryName }}</h1>
                                     {{-- <p class="mx-md-5 px-5 animate__animated animate__bounceIn">Lorem rebum magna amet lorem magna erat diam stet. Sadips duo stet amet amet ndiam elitr ipsum diam</p> --}}
                                     <a class="btn btn-outline-light py-2 px-4 mt-3 animate__animated animate__fadeInUp"
-                                        href="#">Shop Now</a>
+                                        href="/viewCategory/{{$category->id}}">Shop Now</a>
                                 </div>
                             </div>
                         </div>
@@ -127,12 +137,10 @@
                         {{-- <img class="img-fluid w-100" src="{{ asset($product->images->first()->imagePath) }}"
                             alt=""> --}}
                         <div class="product-action">
-                            <a class="btn btn-outline-dark btn-square" href=""><i
+                            <a class="btn btn-outline-dark btn-square" href="/productDetails/{{$product->id}}"><i
                                     class="fa fa-shopping-cart"></i></a>
-                            <a class="btn btn-outline-dark btn-square" href=""><i class="far fa-heart"></i></a>
-                            <a class="btn btn-outline-dark btn-square" href=""><i
-                                    class="fa fa-sync-alt"></i></a>
-                            <a class="btn btn-outline-dark btn-square" href=""><i
+                            <a class="btn btn-outline-dark btn-square" href="/favoriteProduct/{{$product->id}}"><i class="far fa-heart"></i></a>
+                            <a class="btn btn-outline-dark btn-square" href="/productDetails/{{$product->id}}"><i
                                     class="fa fa-search"></i></a>
                         </div>
                     </div>
@@ -200,13 +208,11 @@
                         <img class="img-fluid w-40" src="{{ $product->images->isNotEmpty() && $product->images->first()->imagePath != null ? asset($product->images->first()->imagePath) : asset('img/defaultProduct.png') }}"
                         alt="Product Image">
                         <div class="product-action">
-                            <a class="btn btn-outline-dark btn-square" href=""><i
+                            <a class="btn btn-outline-dark btn-square" href="/productDetails/{{$product->id}}"><i
                                     class="fa fa-shopping-cart"></i></a>
-                            <a class="btn btn-outline-dark btn-square" href=""><i
+                            <a class="btn btn-outline-dark btn-square" href="/favoriteProduct/{{$product->id}}"><i
                                     class="far fa-heart"></i></a>
-                            <a class="btn btn-outline-dark btn-square" href=""><i
-                                    class="fa fa-sync-alt"></i></a>
-                            <a class="btn btn-outline-dark btn-square" href=""><i
+                            <a class="btn btn-outline-dark btn-square" href="/productDetails/{{$product->id}}"><i
                                     class="fa fa-search"></i></a>
                         </div>
                     </div>
@@ -241,6 +247,7 @@
         <div class="col">
             <div class="owl-carousel vendor-carousel">
                 @foreach ($shops as $shop)
+                <a href="/viewShop/{{$shop->id}}">
                     <div class="bg-light p-4">
                         <img src="{{ asset($shop->shopLogo) }}" alt="">
                     </div>

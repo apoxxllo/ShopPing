@@ -60,8 +60,8 @@
                         </div>
                         <!-- Add Book Button -->
                         <div class="mt-3 text-right">
-                            <button type="button" class="btn btn-info" id="showAddCategoryModalBtn">
-                                <i class="icon icon-plus"></i> Add Category
+                            <button type="button" class="btn btn-info" id="showAddUserModalBtn">
+                                <i class="icon icon-plus"></i> Add User
                             </button>
                         </div>
                     </div>
@@ -72,29 +72,41 @@
     </div>
 </div>
 
-<!-- Add Category Modal -->
-<div class="modal fade" id="addCategoryModal" tabindex="-1" role="dialog" aria-labelledby="addCategoryModalLabel" aria-hidden="true">
+<!-- Add User Modal -->
+<div class="modal fade" id="addUserModal" tabindex="-1" role="dialog" aria-labelledby="addCategoryModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="addCategoryModalLabel">Add New Category</h5>
+                <h5 class="modal-title" id="addCategoryModalLabel">Add New User</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
                 <!-- Form for adding a new category -->
-                <form id="addCategoryForm" method="POST" action="{{route('addCategory')}}" enctype="multipart/form-data">
+                <form id="addUserForm" method="POST" action="{{route('addUser')}}" enctype="multipart/form-data">
                     @csrf
                     <div class="form-group">
-                        <label for="categoryName">Category Name</label>
-                        <input type="text" class="form-control" id="categoryName" name="categoryName" value="">
+                        <label for="username">User userame</label>
+                        <input type="text" class="form-control" id="username" name="username" value="{{old('username')}}">
                     </div>
                     <div class="form-group">
-                        <label for="categoryImage">Category Image Label (optional)</label>
-                        <input type="file" class="form-control" id="categoryImage" name="categoryImage" accept="image/*">
+                        <label for="username">User email</label>
+                        <input type="text" class="form-control" id="email" name="email" value="{{old('email')}}">
                     </div>
-                    <button type="submit" class="btn btn-primary" id="addCategoryBtn">Add</button>
+                    <div class="form-group">
+                        <label for="firstName">User first name</label>
+                        <input type="text" class="form-control" id="firstName" name="firstName" value="{{old('firstName')}}">
+                    </div>
+                    <div class="form-group">
+                        <label for="lastName">User last name</label>
+                        <input type="text" class="form-control" id="lastName" name="lastName" value="{{old('lastName')}}">
+                    </div>
+                    <div class="form-group">
+                        <label for="password">User password</label>
+                        <input type="password" class="form-control" id="password" name="password" value="">
+                    </div>
+                    <button type="submit" class="btn btn-primary" id="addUserBtn">Add</button>
                 </form>
             </div>
             <div class="modal-footer">

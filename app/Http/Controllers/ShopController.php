@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cart;
 use App\Models\Shop;
 use App\Models\User;
 use App\Models\Product;
@@ -21,7 +22,6 @@ class ShopController extends Controller
             'address' => 'required|string|max:255',
             'description' => 'required|string|max:255'
         ]);
-
         // Store the shop logo if provided
         $shopLogoPath = null;
         if ($request->hasFile('shopLogo')) {
@@ -51,7 +51,11 @@ class ShopController extends Controller
         $shop = Shop::find($id);
         $categories = Category::all();
         $products = Product::where('shop_id', $id)->get();
-        return view('viewShop')->with('shop', $shop)->with('categories', $categories)->with('products', $products);
+        $popularProducts = Product::where('shop_id', $id)->inRandomOrder()->limit(4)->get();
+
+        $user = User::findOrFail(Auth::user()->id);
+        $cartCount = Cart::where('user_id', $user->id)->count();
+        return view('viewShop', compact('cartCount', 'popularProducts'))->with('shop', $shop)->with('categories', $categories)->with('products', $products);
     }
     public function viewYourShop($id)
     {
@@ -64,7 +68,10 @@ class ShopController extends Controller
         $shop = Shop::find($id);
         $products = Product::where('shop_id', $id)->get();
         $categories = Category::all();
+        $cartCount = Cart::where('user_id', $user->id)->count();
+        $popularProducts = Product::where('shop_id', $id)->inRandomOrder()->limit(4)->get();
 
-        return view('viewYourShop')->with('shop', $shop)->with('products', $products)->with('categories', $categories);
+
+        return view('viewYourShop', compact('cartCount', 'popularProducts'))->with('shop', $shop)->with('products', $products)->with('categories', $categories);
     }
 }

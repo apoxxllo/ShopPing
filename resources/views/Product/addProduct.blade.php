@@ -1,4 +1,4 @@
-@include('layouts.header')
+@include('layouts.header', ['categories' => $categories, 'cartCount' => $cartCount])
 
 <div class="container-fluid pt-4">
     @if (session('error'))

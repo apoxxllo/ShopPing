@@ -1,7 +1,22 @@
-    @include('layouts.header')
+@include('layouts.header', ['categories' => $categories, 'cartCount' => $cartCount])
 
     <!-- Product Detail Start -->
     <div class="container-fluid pb-5">
+        @if (session('error'))
+            <div class="alert alert-danger" style="border-radius: 0;" role="alert">
+                {{ session('error') }}
+            </div>
+        @endif
+        @if (!$errors->isEmpty())
+            <div class="alert alert-danger" style="border-radius: 0;" role="alert">
+                {{ $errors->first() }}
+            </div>
+        @endif
+        @if (session('success'))
+            <div class="alert alert-success" style="border-radius: 0;" role="alert">
+                {{ session('success') }}
+            </div>
+        @endif
         <div class="row px-xl-5">
             <div class="col-lg-5 mb-30">
                 <div id="product-carousel" class="carousel slide" data-ride="carousel">
@@ -37,26 +52,35 @@
                         <small class="pt-1">(99 Reviews)</small>
                     </div>
                     <h3 class="font-weight-semi-bold mb-4">Php{{ $product->price }}</h3>
-                    <p class="mb-4">{{ $product->description }}</p>
-                    <p class="mb-4">Stock: {{ $product->stock }} pieces</p>
+                    <p class="mb-2">{{ $product->description }}</p>
+                    <p class="mb-2">Stock: {{ $product->stock }} pieces</p>
+                    <form method="POST" action="{{ route('addToCart') }}">
+                        @csrf
+                        <div class="d-flex align-items-center mb-4 pt-2">
+                            <div class="input-group quantity mr-3" style="width: 130px;">
 
-                    <div class="d-flex align-items-center mb-4 pt-2">
-                        <div class="input-group quantity mr-3" style="width: 130px;">
-                            <div class="input-group-btn">
-                                <button class="btn btn-primary btn-minus">
-                                    <i class="fa fa-minus"></i>
-                                </button>
+                                <div class="input-group-btn">
+                                    <button type="button" class="btn btn-primary btn-minus"
+                                        onclick="updateQuantity(-1)">
+                                        <i class="fa fa-minus"></i>
+                                    </button>
+                                </div>
+
+                                <input type="text" id="productQuantity" name="quantity"
+                                    class="form-control bg-secondary border-0 text-center" value="1" readonly>
+                                <div class="input-group-btn">
+                                    <button type="button" class="btn btn-primary btn-plus" onclick="updateQuantity(1)">
+                                        <i class="fa fa-plus"></i>
+                                    </button>
+                                </div>
                             </div>
-                            <input type="text" class="form-control bg-secondary border-0 text-center" value="1">
-                            <div class="input-group-btn">
-                                <button class="btn btn-primary btn-plus">
-                                    <i class="fa fa-plus"></i>
-                                </button>
-                            </div>
+                            <input type="hidden" readonly id="productId" name="productId" value="{{ $product->id }}">
+                            <button type="submit" class="btn btn-primary px-3" id="addToCartBtn"><i
+                                    class="fa fa-shopping-cart mr-1"></i>
+                                Add To Cart</button>
                         </div>
-                        <button class="btn btn-primary px-3"><i class="fa fa-shopping-cart mr-1"></i> Add To
-                            Cart</button>
-                    </div>
+                    </form>
+
                     <div class="d-flex pt-2">
                         <strong class="text-dark mr-2">Share on:</strong>
                         <div class="d-inline-flex">
@@ -181,7 +205,7 @@
                             </div>
                             <div class="text-center py-4">
                                 <a class="h6 text-decoration-none text-truncate"
-                                    href="/productDetails/{{$product->id}}">{{ $product->name }}</a>
+                                    href="/productDetails/{{ $product->id }}">{{ $product->name }}</a>
                                 <div class="d-flex align-items-center justify-content-center mt-2">
                                     <h5>Php{{ $product->price }}</h5>
                                     <h6 class="text-muted ml-2"></h6>
@@ -199,7 +223,7 @@
                     @endforeach
                 </div>
                 @if ($featured->isEmpty())
-                    <div class="alert alert-warning">
+                    <div class="alert alert-warning text-center mr-5 ml-5">
                         Shop has no more products
                     </div>
                 @endif
@@ -207,5 +231,35 @@
         </div>
     </div>
     <!-- Products End -->
+
+    <script>
+        function updateQuantity(change) {
+            let quantityInput = document.getElementById('productQuantity');
+            let currentQuantity = parseInt(quantityInput.value);
+            console.log(currentQuantity)
+            if (change === -1 && currentQuantity > 1) {
+                quantityInput.value = currentQuantity - 1;
+                console.log(quantityInput.value)
+            } else if (change === 1) {
+                if (currentQuantity !== {{ $product->stock }}) {
+                    quantityInput.value = currentQuantity + 1;
+                    console.log(quantityInput.value)
+                }
+            }
+        }
+
+        document.getElementById('addToCartBtn').addEventListener('click', function() {
+            let quantity = parseInt(document.getElementById('productQuantity').value);
+            if (quantity >= 1) {
+                addToCart(quantity);
+            }
+        });
+
+        function addToCart(quantity) {
+            // Perform your add to cart logic here
+            alert('Product added to cart with quantity: ' + quantity);
+            // You can send an AJAX request to your server here
+        }
+    </script>
 
     @include('layouts.footer')

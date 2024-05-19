@@ -1,4 +1,4 @@
-@include('layouts.header', ['categories' => $categories])
+@include('layouts.header', ['categories' => $categories, 'cartCount' => $cartCount])
 
     <!-- Checkout Start -->
     <div class="container-fluid">
@@ -159,7 +159,7 @@
                     <div class="bg-light p-30">
                         <div class="form-group">
                             <div class="custom-control custom-radio">
-                                <input type="radio" class="custom-control-input" name="gcash" id="gcash">
+                                <input type="radio" class="custom-control-input" name="payment" id="gcash">
                                 <label class="custom-control-label" for="gcash">GCash</label>
                             </div>
                         </div>

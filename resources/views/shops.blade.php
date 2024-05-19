@@ -1,4 +1,4 @@
-@include('layouts.header', ['categories' => $categories])
+@include('layouts.header', ['categories' => $categories, 'cartCount' => $cartCount])
 
 <!-- Featured Start -->
 <div class="container-fluid pt-1">
@@ -15,7 +15,7 @@
                         <div class="product-img position-relative overflow-hidden">
                             <img class="img-fluid w-100" src="{{ $shop->shopLogo }}" alt="Shop Logo">
                             <div class="product-action">
-                                <a class="btn btn-outline-dark btn-square" href=""><i
+                                <a class="btn btn-outline-dark btn-square" href="/favoriteShop/{{$shop->id}}"><i
                                         class="far fa-heart"></i></a>
                                 {{-- <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-sync-alt"></i></a> --}}
                                 <a class="btn btn-outline-dark btn-square" href="/viewShop/{{$shop->id}}"><i
@@ -82,7 +82,7 @@
     <div class="row px-xl-5 pb-3">
         @foreach ($categories as $category)
             <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
-                <a class="text-decoration-none" href="">
+                <a class="text-decoration-none" href="/viewCategory/{{$category->id}}">
                     <div class="cat-item d-flex align-items-center mb-4">
                         <div class="overflow-hidden" style="width: 100px; height: 100px;">
                             <img class="img-fluid" src="{{ asset($category->imagePath) }}" alt="">
@@ -114,12 +114,10 @@
                         {{-- <img class="img-fluid w-100" src="{{ asset($product->images->first()->imagePath) }}"
                             alt=""> --}}
                         <div class="product-action">
-                            <a class="btn btn-outline-dark btn-square" href=""><i
+                            <a class="btn btn-outline-dark btn-square" href="/productDetails/{{$product->id}}"><i
                                     class="fa fa-shopping-cart"></i></a>
-                            <a class="btn btn-outline-dark btn-square" href=""><i class="far fa-heart"></i></a>
-                            <a class="btn btn-outline-dark btn-square" href=""><i
-                                    class="fa fa-sync-alt"></i></a>
-                            <a class="btn btn-outline-dark btn-square" href=""><i
+                            <a class="btn btn-outline-dark btn-square" href="/favoriteProduct/{{$product->id}}"><i class="far fa-heart"></i></a>
+                            <a class="btn btn-outline-dark btn-square" href="/productDetails/{{$product->id}}"><i
                                     class="fa fa-search"></i></a>
                         </div>
                     </div>
@@ -157,7 +155,7 @@
                 <div class="offer-text">
                     <h6 class="text-white text-uppercase">Save 20%</h6>
                     <h3 class="text-white mb-3">Special Offer</h3>
-                    <a href="" class="btn btn-primary">Shop Now</a>
+                    <a href="/shops" class="btn btn-primary">Shop Now</a>
                 </div>
             </div>
         </div>
@@ -167,7 +165,7 @@
                 <div class="offer-text">
                     <h6 class="text-white text-uppercase">Save 20%</h6>
                     <h3 class="text-white mb-3">Special Offer</h3>
-                    <a href="" class="btn btn-primary">Shop Now</a>
+                    <a href="/shops" class="btn btn-primary">Shop Now</a>
                 </div>
             </div>
         </div>
@@ -188,13 +186,11 @@
                         <img class="img-fluid w-40" src="{{ $product->images->isNotEmpty() && $product->images->first()->imagePath != null ? asset($product->images->first()->imagePath) : asset('img/defaultProduct.png') }}"
                         alt="Product Image">
                         <div class="product-action">
-                            <a class="btn btn-outline-dark btn-square" href=""><i
+                            <a class="btn btn-outline-dark btn-square" href="/productDetails/{{$product->id}}"><i
                                     class="fa fa-shopping-cart"></i></a>
-                            <a class="btn btn-outline-dark btn-square" href=""><i
+                            <a class="btn btn-outline-dark btn-square" href="/favoriteProduct/{{$product->id}}"><i
                                     class="far fa-heart"></i></a>
-                            <a class="btn btn-outline-dark btn-square" href=""><i
-                                    class="fa fa-sync-alt"></i></a>
-                            <a class="btn btn-outline-dark btn-square" href=""><i
+                            <a class="btn btn-outline-dark btn-square" href="/productDetails/{{$product->id}}"><i
                                     class="fa fa-search"></i></a>
                         </div>
                     </div>

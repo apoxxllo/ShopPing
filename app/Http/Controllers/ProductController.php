@@ -2,13 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cart;
 use App\Models\Shop;
-use Illuminate\Support\Str;
+use App\Models\User;
 use App\Models\Product;
 use App\Models\Category;
+use Illuminate\Support\Str;
 use App\Models\ProductImage;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
@@ -20,7 +23,10 @@ class ProductController extends Controller
         ->get();
         $categories = Category::all();
 
-        return view('Product.productDetails')->with('product', $product)->with('featured', $featured)->with('categories', $categories);
+        $user = User::findOrFail(Auth::user()->id);
+        $cartCount = Cart::where('user_id', $user->id)->count();
+
+        return view('Product.productDetails', compact('cartCount'))->with('product', $product)->with('featured', $featured)->with('categories', $categories);
     }
 
     public function editProduct()
@@ -37,7 +43,9 @@ class ProductController extends Controller
     {
         $shop = Shop::find($id);
         $categories = Category::all();
-        return view('Product.addProduct')->with('shop', $shop)->with('categories', $categories);
+        $user = User::findOrFail(Auth::user()->id);
+        $cartCount = Cart::where('user_id', $user->id)->count();
+        return view('Product.addProduct', compact('cartCount'))->with('shop', $shop)->with('categories', $categories);
     }
 
     public function addProductPost(Request $request, $id)

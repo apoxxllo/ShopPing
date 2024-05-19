@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cart;
 use App\Models\Shop;
 use App\Models\User;
 use App\Models\Product;
@@ -18,15 +19,18 @@ class HomeController extends Controller
         $recentProducts = Product::latest()->take(4)->get();
         $featuredProducts = Product::inRandomOrder()->limit(4)->get();
         $shops = Shop::all();
-
-        return view('landing')->with('shops', $shops)->with('categories', $categories)->with('products', $products)->with('recentProducts', $recentProducts)->with('featured', $featuredProducts);
+        $user = User::findOrFail(Auth::user()->id);
+        $cartCount = Cart::where('user_id', $user->id)->count();
+        return view('landing')->with('cartCount', $cartCount)->with('shops', $shops)->with('categories', $categories)->with('products', $products)->with('recentProducts', $recentProducts)->with('featured', $featuredProducts);
     }
     public function shops(){
         $shops = Shop::all();
         $categories = Category::withCount('products')->get();
         $recentProducts = Product::latest()->take(4)->get();
         $featuredProducts = Product::inRandomOrder()->limit(4)->get();
-        return view('shops')->with('shops', $shops)->with('categories', $categories)->with('featuredProducts', $featuredProducts)->with('recentProducts', $recentProducts);
+        $user = User::findOrFail(Auth::user()->id);
+        $cartCount = Cart::where('user_id', $user->id)->count();
+        return view('shops')->with('cartCount', $cartCount)->with('shops', $shops)->with('categories', $categories)->with('featuredProducts', $featuredProducts)->with('recentProducts', $recentProducts);
     }
     public function yourShops(){
         $user = User::findOrFail(Auth::user()->id);
@@ -35,26 +39,42 @@ class HomeController extends Controller
         $recentProducts = Product::latest()->take(4)->get();
         $featuredProducts = Product::inRandomOrder()->limit(4)->get();
         $allShops = Shop::all();
-
-        return view('yourShops', compact('allShops','user', 'shops', 'recentProducts', 'featuredProducts'))->with('categories', $categories);
+        $cartCount = Cart::where('user_id', $user->id)->count();
+        return view('yourShops', compact('cartCount','allShops','user', 'shops', 'recentProducts', 'featuredProducts'))->with('categories', $categories);
     }
     public function contact(){
         $categories = Category::withCount('products')->get();
-        return view('contact')->with('categories', $categories);
+        $user = User::findOrFail(Auth::user()->id);
+        $cartCount = Cart::where('user_id', $user->id)->count();
+        return view('contact', compact('cartCount'))->with('categories', $categories);
     }
     public function cart(){
         $categories = Category::all();
         $user = Auth::user();
-        $cart = Cart::where('user_id', $user->id);
-        return view('cart')->with('categories', $categories);
+        $cart = Cart::where('user_id', $user->id)->with('product')->get();
+        $cartCount = Cart::where('user_id', $user->id)->count();
+
+        $total = 0;
+        foreach ($cart as $item) {
+            $total = $total + ($item->product->price * $item->quantity);
+        }
+        return view('cart', compact('cartCount'))->with('cart', $cart)->with('categories', $categories)->with('total', $total);
     }
     public function checkout(){
         $categories = Category::all();
-        return view('checkout')->with('categories', $categories);
+        $user = User::findOrFail(Auth::user()->id);
+        $cartCount = Cart::where('user_id', $user->id)->count();
+        return view('checkout', compact('cartCount'))->with('categories', $categories);
     }
     public function setupSeller(){
         $categories = Category::all();
-        return view('setupSeller')->with('categories', $categories);
+        $user = User::findOrFail(Auth::user()->id);
+        $cartCount = Cart::where('user_id', $user->id)->count();
+        if(!Auth::user()->shops->isEmpty())
+        {
+            return redirect()->back()->with('error', 'You already have a shop! Subscribe to premium to have more than one shop!');
+        }
+        return view('setupSeller', compact('cartCount'))->with('categories', $categories);
     }
 
     public function viewCategory($id)
@@ -65,6 +85,10 @@ class HomeController extends Controller
         $recentProducts = Product::where('category_id', $id)->latest()->take(4)->get();
         $featured = Product::where('category_id', $id)->inRandomOrder()->limit(4)->get();
         $shops = Shop::all();
-        return view('viewCategory', compact('shops','category', 'products', 'categories', 'recentProducts', 'featured'));
+
+        $user = User::findOrFail(Auth::user()->id);
+        $cartCount = Cart::where('user_id', $user->id)->count();
+
+        return view('viewCategory', compact('cartCount','shops','category', 'products', 'categories', 'recentProducts', 'featured'));
     }
 }

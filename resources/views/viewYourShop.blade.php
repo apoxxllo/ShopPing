@@ -48,10 +48,31 @@
                     </div>
                     <small class="pt-1">(99 Reviews)</small>
                 </div>
-                <h3 class="font-weight-semi-bold mb-4">$150.00</h3>
-                <p class="mb-4">Volup erat ipsum diam elitr rebum et dolor. Est nonumy elitr erat diam stet sit
-                    clita ea. Sanc ipsum et, labore clita lorem magna duo dolor no sea
-                    Nonumy</p>
+                {{-- <h3 class="font-weight-semi-bold mb-4">$150.00</h3> --}}
+                <p class="mb-4">{{$shop->description}}</p>
+                <h2 class="mt-4 mb-3">Popular Products</h2>
+                <div class="row">
+                    @if($popularProducts->isEmpty())
+                        <div class="alert alert-warning col-md-12 text-center mr-3">
+                            No product found
+                        </div>
+                    @endif
+                    @foreach ($popularProducts as $product)
+                        <div class="col-md-4 mb-4">
+                            <div class="card">
+                                <img class="card-img-top"
+                                    src="{{ $product->images->isNotEmpty() && $product->images->first()->imagePath != null ? asset($product->images->first()->imagePath) : asset('img/defaultProduct.png') }}"
+                                    alt="Product Image">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ $product->name }}</h5>
+                                    <p class="card-text">{{ $product->description }}</p>
+                                    <a href="/productDetails/{{ $product->id }}" class="btn btn-primary">View
+                                        Details</a>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
             </div>
         </div>
     </div>

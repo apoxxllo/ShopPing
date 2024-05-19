@@ -35,7 +35,7 @@
                     @auth
                         <a class="text-body mr-3" style="font-weight: bolder;">Welcome, {{ Auth::user()->username }}!</a>
                     @endauth
-                    <a class="text-body mr-3" href="">About</a>
+                    <a class="text-body mr-3" href="/">About</a>
                     <a class="text-body mr-3" href="/contact">Contact</a>
                 </div>
             </div>
@@ -126,7 +126,7 @@
                     id="navbar-vertical" style="width: calc(100% - 30px); z-index: 999;">
                     <div class="navbar-nav w-100">
                         @foreach ($categories as $category)
-                            <a href="" class="nav-item nav-link">{{$category->categoryName}}</a>
+                            <a href="/viewCategory/{{$category->id}}" class="nav-item nav-link">{{$category->categoryName}}</a>
                         @endforeach
                     </div>
                 </nav>
@@ -181,10 +181,10 @@
                                 <span class="badge text-secondary border border-secondary rounded-circle"
                                     style="padding-bottom: 2px;">0</span>
                             </a>
-                            <a href="" class="btn px-0 ml-3">
+                            <a href="/cart" class="btn px-0 ml-3">
                                 <i class="fas fa-shopping-cart text-primary"></i>
                                 <span class="badge text-secondary border border-secondary rounded-circle"
-                                    style="padding-bottom: 2px;">0</span>
+                                    style="padding-bottom: 2px;">{{$cartCount}}</span>
                             </a>
                         </div>
                     </div>

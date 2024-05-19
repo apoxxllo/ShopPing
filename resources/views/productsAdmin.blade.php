@@ -50,6 +50,11 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    @if($products->isEmpty())
+                                    <tr>
+                                        <td colspan="8" class="text-center">No products added</td>
+                                    </tr>
+                                    @endif
                                     @foreach ($products as $product)
                                         <tr>
                                             <td>

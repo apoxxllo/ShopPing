@@ -47,6 +47,9 @@
             $('#showAddCategoryModalBtn').click(function() {
                 $('#addCategoryModal').modal('show');
             });
+            $('#showAddUserModalBtn').click(function() {
+                $('#addUserModal').modal('show');
+            });
             $('#showAddProductModalBtn').click(function() {
                 $('#addProductModal').modal('show');
             });

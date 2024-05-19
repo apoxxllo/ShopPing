@@ -65,6 +65,16 @@
 </style>
 <div class="container mt-5">
     <div class="row justify-content-center">
+        @if (session('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+        @endif
+        @if (session('error'))
+            <div class="alert alert-danger">
+                {{ session('error') }}
+            </div>
+        @endif
         <div class="col-md-8">
             <div class="card">
                 <div class="card-header" style="color:black">User Profile</div>
@@ -81,14 +91,16 @@
                         <div class="form-group row">
                             <label for="username" class="col-md-4 col-form-label text-md-right">Username:</label>
                             <div class="col-md-6">
-                                <input id="username" name="username" type="text" class="form-control" value="{{ $user->username }}">
+                                <input id="username" name="username" type="text" class="form-control"
+                                    value="{{ $user->username }}">
                             </div>
                         </div>
 
                         <div class="form-group row">
                             <label for="email" class="col-md-4 col-form-label text-md-right">Email:</label>
                             <div class="col-md-6">
-                                <input id="email" name="email" type="email" class="form-control" value="{{ $user->email }}">
+                                <input id="email" name="email" type="email" class="form-control"
+                                    value="{{ $user->email }}">
                             </div>
                         </div>
 
@@ -103,7 +115,8 @@
                         <div class="form-group row">
                             <label for="lastname" class="col-md-4 col-form-label text-md-right">Last Name:</label>
                             <div class="col-md-6">
-                                <input id="lastName" type="text" class="form-control" name="lastName" value="{{ $user->lastName }}">
+                                <input id="lastName" type="text" class="form-control" name="lastName"
+                                    value="{{ $user->lastName }}">
                             </div>
                         </div>
 
