@@ -4,7 +4,9 @@ namespace App\Models;
 
 use App\Models\Cart;
 use App\Models\Shop;
+use App\Models\Order;
 use App\Models\Category;
+use App\Models\OrderedProduct;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -24,6 +26,10 @@ class Product extends Model
     {
         return $this->hasMany(ProductImage::class);
     }
+    public function orders()
+    {
+        return $this->hasMany(OrderedProduct::class);
+    }
     public function category()
     {
         return $this->belongsTo(Category::class);
@@ -32,9 +38,6 @@ class Product extends Model
     {
         return $this->belongsTo(Shop::class);
     }
-    // public function carts()
-    // {
-    //     return $this->hasMany(Cart::class);
-    // }
+
 
 }

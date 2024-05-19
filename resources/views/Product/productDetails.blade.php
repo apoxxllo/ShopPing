@@ -1,5 +1,5 @@
 @include('layouts.header', ['categories' => $categories, 'cartCount' => $cartCount])
-
+{{$itemStock = $product->stock}}
     <!-- Product Detail Start -->
     <div class="container-fluid pb-5">
         @if (session('error'))
@@ -241,7 +241,7 @@
                 quantityInput.value = currentQuantity - 1;
                 console.log(quantityInput.value)
             } else if (change === 1) {
-                if (currentQuantity !== {{ $product->stock }}) {
+                if (currentQuantity !== {{ $itemStock }}) {
                     quantityInput.value = currentQuantity + 1;
                     console.log(quantityInput.value)
                 }

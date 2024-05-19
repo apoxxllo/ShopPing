@@ -38,6 +38,8 @@
             <div class="h-100 bg-light p-30">
                 <h3>{{$shop->shopName}}</h3>
                 <a href="/addProduct/{{$shop->id}}" class="btn btn-primary">Add Product</a>
+                <a href="/manageOrders/{{$shop->id}}" class="btn btn-primary">Manage Orders</a>
+                <a href="/manageProducts/{{$shop->id}}" class="btn btn-primary">Manage Products</a>
                 <div class="d-flex mb-3">
                     <div class="text-primary mr-2">
                         <small class="fas fa-star"></small>
@@ -46,7 +48,7 @@
                         <small class="fas fa-star-half-alt"></small>
                         <small class="far fa-star"></small>
                     </div>
-                    <small class="pt-1">(99 Reviews)</small>
+                    <small style="color:black" class="pt-1">(99 Reviews)</small>
                 </div>
                 {{-- <h3 class="font-weight-semi-bold mb-4">$150.00</h3> --}}
                 <p class="mb-4">{{$shop->description}}</p>

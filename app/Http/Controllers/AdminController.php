@@ -2,9 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Validation\Rules;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Auth;
 use App\Models\Shop;
 use App\Models\User;
 use App\Models\Product;
@@ -12,8 +9,12 @@ use App\Models\Category;
 use Illuminate\Support\Str;
 use App\Models\ProductImage;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
 {
@@ -118,9 +119,9 @@ class AdminController extends Controller
                 $image->move(public_path('img/categoryImage'), $imageName);
 
                 // Delete the old image if it exists
-                if ($category->imagePath && File::exists(public_path($category->imagePath))) {
-                    File::delete(public_path($category->imagePath));
-                }
+                // if ($category->imagePath && File::exists(public_path($category->imagePath))) {
+                //     File::delete(public_path($category->imagePath));
+                // }
 
                 // Update the category's image path
                 $category->imagePath = $imagePath;
@@ -292,5 +293,101 @@ class AdminController extends Controller
         ]);
 
         return redirect()->back()->with('success', 'User created successfully!');
+    }
+
+    public function deleteUser(Request $request)
+    {
+        try {
+            // Find the category by ID
+            $user = User::findOrFail($request->input('userId'));
+
+            // Delete the category
+            $user->delete();
+
+            // Optionally, you can return a success message or redirect to a success page
+            return redirect()->back()->with('success', 'User deleted successfully!');
+        } catch (\Exception $e) {
+            // Handle any errors, such as the category not found
+            return redirect()->back()->with('error', 'Failed to delete user: ' . $e->getMessage());
+        }
+    }
+
+    public function updateUser(Request $request)
+    {
+        try {
+            $user = User::findOrFail($request->input('userId'));
+            // Validate incoming request data
+
+            $request->validate([
+                'username' => ['required','string','max:255', Rule::unique('users')->ignore($user->id)],
+                'email' => ['required', 'string', 'lowercase', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
+                'firstName' => ['required', 'string', 'max:255'],
+                'lastName' => ['required', 'string', 'max:255']
+            ]);
+            // Update the category details
+            $user->username = $request['username'];
+            $user->email = $request['email'];
+            $user->lastName = $request['lastName'];
+            $user->firstName = $request['firstName'];
+
+            // Save the updated category details to the database
+            $user->save();
+
+            // Redirect back with a success message
+            return redirect()->back()->with('success', 'User updated successfully!');
+
+        } catch (\Exception $e) {
+            // Handle errors
+            return redirect()->back()->with('error', 'Failed to update category: ' . $e->getMessage());
+        }
+    }
+
+
+    // RUD SHOP
+    public function updateShop(Request $request)
+    {
+        // Validate incoming request data
+        $validatedData = $request->validate([
+            'shopName' => 'required|string|max:255',
+            'address' => 'required|string|max:255',
+            'description' => 'required|string|max:2048'
+        ]);
+
+        try {
+            // Find the category by ID
+            $shop = Shop::findOrFail($request->input('shopId'));
+
+            // Update the category details
+            $shop->shopName = $validatedData['shopName'];
+            $shop->address = $validatedData['address'];
+            $shop->description = $validatedData['description'];
+
+            // Save the updated category details to the database
+            $shop->save();
+
+            // Redirect back with a success message
+            return redirect()->back()->with('success', 'Shop updated successfully!');
+
+        } catch (\Exception $e) {
+            // Handle errors
+            return redirect()->back()->with('error', 'Failed to update shop: ' . $e->getMessage());
+        }
+    }
+
+    public function deleteShop(Request $request)
+    {
+        try {
+            // Find the category by ID
+            $shop = Shop::findOrFail($request->input('shopId'));
+
+            // Delete the category
+            $shop->delete();
+
+            // Optionally, you can return a success message or redirect to a success page
+            return redirect()->back()->with('success', 'Shop deleted successfully!');
+        } catch (\Exception $e) {
+            // Handle any errors, such as the category not found
+            return redirect()->back()->with('error', 'Failed to delete shop: ' . $e->getMessage());
+        }
     }
 }

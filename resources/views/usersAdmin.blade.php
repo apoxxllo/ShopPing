@@ -44,21 +44,24 @@
                                             <td>{{ $user->firstName }}</td>
                                             <td>{{ $user->lastName }}</td>
                                             <td>{{ $user->role->name }}</td>
-                                            <td> <a href="#" class="btn btn-info editCategoryBtn"
-                                                    style="color: white;" id="showEditCategoryModalBtn" data-toggle="modal"
+                                            <td> <a href="#" class="btn btn-info editUserBtn"
+                                                    style="color: white;" id="showEditUserModalBtn" data-toggle="modal"
                                                     data-target="#editUserModal"
                                                     data-id="{{$user->id}}"
                                                     data-username="{{$user->username}}"
+                                                    data-firstname="{{$user->firstName}}"
+                                                    data-email="{{$user->email}}"
+                                                    data-lastname="{{$user->lastName}}"
                                                     >Edit</a>
-                                                || <a class="btn btn-danger deleteCategoryBtn" style="color: white;"
-                                                    id="showDeleteCategoryModalBtn" data-toggle="modal" data-id="{{$user->id}}" data-username="{{$user->username}}"
-                                                    data-target="#deleteCategoryModal">Delete</a></td>
+                                                || <a class="btn btn-danger deleteUserBtn" style="color: white;"
+                                                    id="showDeleteUserModalBtn" data-toggle="modal" data-id="{{$user->id}}" data-username="{{$user->username}}"
+                                                    data-target="#deleteUserModal">Delete</a></td>
                                         </tr>
                                     @endforeach
                                 </tbody>
                             </table>
                         </div>
-                        <!-- Add Book Button -->
+                        <!-- Add User Button -->
                         <div class="mt-3 text-right">
                             <button type="button" class="btn btn-info" id="showAddUserModalBtn">
                                 <i class="icon icon-plus"></i> Add User
@@ -116,8 +119,8 @@
     </div>
 </div>
 
- <!-- Delete Category Modal -->
- <div class="modal fade" id="deleteCategoryModal" tabindex="-1" role="dialog" aria-labelledby="deleteCategoryModalLabel" aria-hidden="true">
+ <!-- Delete User Modal -->
+ <div class="modal fade" id="deleteUserModal" tabindex="-1" role="dialog" aria-labelledby="deleteCategoryModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header bg-danger text-white">
@@ -127,47 +130,53 @@
                 </button>
             </div>
             <div class="modal-body">
-                <p id="output">Are you sure you want to delete this category?</p>
+                <p id="output">Are you sure you want to delete this user?</p>
                 <p>This action cannot be undone.</p>
             </div>
-            <form id="deleteCategoryForm" action="{{route('deleteCategory')}}" method="POST">
+            <form id="deleteUserForm" action="{{route('deleteUser')}}" method="POST">
                 @csrf
                 <div class="modal-footer">
-                    <input type="hidden" readonly id="categoryId" name="categoryId" value="">
-                    <input type="hidden" class="form-control" id="deleteCategoryId" name="id">
+                    <input type="hidden" readonly id="userId" name="userId" value="">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-danger" id="confirmDeleteCategoryBtn">Delete</button>
+                    <button type="submit" class="btn btn-danger" id="confirmDeleteUserBtn">Delete</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
 
-<!-- Edit Category Modal -->
-<div class="modal fade" id="editCategoryModal" tabindex="-1" role="dialog" aria-labelledby="editCategoryModalLabel" aria-hidden="true">
+<!-- Edit User Modal -->
+<div class="modal fade" id="editUserModal" tabindex="-1" role="dialog" aria-labelledby="editCategoryModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="editCategoryModalLabel">Edit Category</h5>
+                <h5 class="modal-title" id="editCategoryModalLabel">Edit User</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <!-- Form for editing category details -->
-                <form id="editCategoryForm" action="{{ route('updateCategory') }}" method="post" enctype="multipart/form-data">
+                <!-- Form for editing user details -->
+                <form id="editUserForm" action="{{ route('updateUser') }}" method="post" enctype="multipart/form-data">
                     @csrf
-                    <input type="hidden" name="categoryId" id="categoryIdUpdate" readonly hidden>
+                    <input type="hidden" name="userId" id="userIdUpdate" readonly hidden>
                     <div class="form-group">
-                        <label for="editCategoryName">Category Name</label>
-                        <input type="text" class="form-control" id="editCategoryName" name="categoryName">
+                        <label for="editCategoryName">Username</label>
+                        <input type="text" class="form-control" id="editUserName" name="username">
                     </div>
                     <div class="form-group">
-                        <label for="categoryImage">Category Images</label>
-                        <input type="file" class="form-control-file" id="categoryImage" name="categoryImage" onchange="previewImages()">
-                        {{-- <div class="row mt-3" id="imagePreview"></div> --}}
+                        <label for="username">User email</label>
+                        <input type="text" class="form-control" id="editEmail" name="email" value="{{old('email')}}">
                     </div>
-                    <button type="submit" class="btn btn-primary" id="saveCategoryBtn">Save Changes</button>
+                    <div class="form-group">
+                        <label for="firstName">User first name</label>
+                        <input type="text" class="form-control" id="editFirstName" name="firstName" value="{{old('firstName')}}">
+                    </div>
+                    <div class="form-group">
+                        <label for="lastName">User last name</label>
+                        <input type="text" class="form-control" id="editLastName" name="lastName" value="{{old('lastName')}}">
+                    </div>
+                    <button type="submit" class="btn btn-primary" id="saveUserBtn">Save Changes</button>
                 </form>
             </div>
             <div class="modal-footer">
@@ -176,4 +185,5 @@
         </div>
     </div>
 </div>
+
 @include('layouts.footerAdmin')

@@ -43,7 +43,7 @@
                                         src="{{ asset($product->product->images->first()->imagePath) }}" alt=""
                                         style="width: 50px;">
                                     {{ $product->product->name }}</td>
-                                <td class="align-middle">Php {{ $product->product->price }}</td>
+                                <td class="align-middle">Php {{ number_format($product->product->price,2) }}</td>
                                 <td class="align-middle">
                                     <div class="input-group quantity mx-auto" style="width: 100px;">
                                         <form action="{{ route('deductOne') }}" method="post">
@@ -70,7 +70,7 @@
                                         </form>
                                     </div>
                                 </td>
-                                <td class="align-middle">Php {{ $product->quantity * $product->product->price }}
+                                <td class="align-middle">Php {{ number_format($product->quantity * $product->product->price,2) }}
                                 </td>
                                 <td class="align-middle">
                                     <form action="{{ route('removeFromCart') }}" method="post">
@@ -86,21 +86,21 @@
             </table>
         </div>
         <div class="col-lg-4">
-            <form class="mb-30" action="">
+            {{-- <form class="mb-30" action="">
                 <div class="input-group">
                     <input type="text" class="form-control border-0 p-4" placeholder="Coupon Code">
                     <div class="input-group-append">
                         <button class="btn btn-primary">Apply Coupon</button>
                     </div>
                 </div>
-            </form>
+            </form> --}}
             <h5 class="section-title position-relative text-uppercase mb-3"><span class="bg-secondary pr-3">Cart
                     Summary</span></h5>
             <div class="bg-light p-30 mb-5">
                 <div class="border-bottom pb-2">
                     <div class="d-flex justify-content-between mb-3">
                         <h6>Subtotal</h6>
-                        <h6>Php {{ $total }}</h6>
+                        <h6>Php {{ number_format($total,2) }}</h6>
                     </div>
                     {{-- <div class="d-flex justify-content-between">
                         <h6 class="font-weight-medium">Shipping</h6>
@@ -110,7 +110,7 @@
                 <div class="pt-2">
                     <div class="d-flex justify-content-between mt-2">
                         <h5>Total</h5>
-                        <h5>Php {{ $total }}</h5>
+                        <h5>Php {{ number_format($total,2) }}</h5>
                     </div>
                     <a href="/checkout" class="btn btn-block btn-primary font-weight-bold my-3 py-3">Proceed To Checkout</a>
                 </div>

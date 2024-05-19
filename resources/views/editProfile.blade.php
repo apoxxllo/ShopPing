@@ -64,17 +64,22 @@
     }
 </style>
 <div class="container mt-5">
+    @if (session('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
+    @endif
+    @if (!$errors->isEmpty())
+        <div class="alert alert-danger" style="border-radius: 0;" role="alert">
+            {{ $errors->first() }}
+        </div>
+    @endif
+    @if (session('error'))
+        <div class="alert alert-danger">
+            {{ session('error') }}
+        </div>
+    @endif
     <div class="row justify-content-center">
-        @if (session('success'))
-            <div class="alert alert-success">
-                {{ session('success') }}
-            </div>
-        @endif
-        @if (session('error'))
-            <div class="alert alert-danger">
-                {{ session('error') }}
-            </div>
-        @endif
         <div class="col-md-8">
             <div class="card">
                 <div class="card-header" style="color:black">User Profile</div>
@@ -117,6 +122,22 @@
                             <div class="col-md-6">
                                 <input id="lastName" type="text" class="form-control" name="lastName"
                                     value="{{ $user->lastName }}">
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="address" class="col-md-4 col-form-label text-md-right">Address:</label>
+                            <div class="col-md-6">
+                                <input id="address" type="text" name="address" class="form-control"
+                                    value="{{ $user->address }}">
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="contact" class="col-md-4 col-form-label text-md-right">Contact:</label>
+                            <div class="col-md-6">
+                                <input id="contact" type="text" name="contact" class="form-control"
+                                    value="{{ $user->contact }}">
                             </div>
                         </div>
 

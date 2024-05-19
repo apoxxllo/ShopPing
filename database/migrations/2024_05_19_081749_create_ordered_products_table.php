@@ -11,18 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('categories', function (Blueprint $table) {
+        Schema::create('ordered_products', function (Blueprint $table) {
             $table->id();
-            $table->string('categoryName');
-            $table->string('imagePath')->default('img/categoryIcon.png');
+            $table->integer('orderNumber');
+            $table->foreignId('product_id')->constrained()->onDelete('cascade');
+            $table->foreignId('order_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
-
-        DB::table('categories')->insert([
-            ['categoryName' => 'Technology'],
-            ['categoryName' => 'Food'],
-            ['categoryName' => 'Appliances']
-        ]);
     }
 
     /**
@@ -30,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('categories');
+        Schema::dropIfExists('ordered_products');
     }
 };

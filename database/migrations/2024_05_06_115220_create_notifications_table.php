@@ -13,8 +13,11 @@ return new class extends Migration
     {
         Schema::create('notifications', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('fromUser_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreignId('toUser_id')->references('id')->on('users')->onDelete('cascade');
             $table->text('description');
+            $table->integer('orderNumber')->nullable();
+            $table->string('status')->default('UNREAD');
             $table->timestamps();
         });
     }

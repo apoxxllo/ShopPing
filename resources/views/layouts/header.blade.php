@@ -8,6 +8,15 @@
     <meta content="Free HTML Templates" name="keywords">
     <meta content="Free HTML Templates" name="description">
 
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+     crossorigin=""/>
+
+     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+     crossorigin=""></script>
+
     <!-- Favicon -->
     <link href="{{ asset('img/shopPINGLOGO.png') }}" rel="icon">
 
@@ -25,7 +34,9 @@
     <!-- Include the customized Bootstrap stylesheet -->
     <link href="{{ asset('css/style.css') }}" rel="stylesheet">
 </head>
-
+<style>
+    #map { height: 500px; }
+</style>
 <body>
     <!-- Topbar Start -->
     <div class="container-fluid">
@@ -176,7 +187,12 @@
                         </div>
 
                         <div class="navbar-nav ml-auto py-0 d-none d-lg-block">
-                            <a href="" class="btn px-0">
+                            <a href="/notifications" class="btn px-0">
+                                <i class="fas fa-bell text-primary"></i>
+                                <span class="badge text-secondary border border-secondary rounded-circle"
+                                    style="padding-bottom: 2px;">0</span>
+                            </a>
+                            <a href="/favorites" class="btn px-0 ml-3">
                                 <i class="fas fa-heart text-primary"></i>
                                 <span class="badge text-secondary border border-secondary rounded-circle"
                                     style="padding-bottom: 2px;">0</span>

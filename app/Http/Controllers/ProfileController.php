@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cart;
 use App\Models\Category;
 use Illuminate\View\View;
 use Illuminate\Http\Request;
@@ -18,19 +19,25 @@ class ProfileController extends Controller
     public function editProfile(Request $request): View
     {
         $categories = Category::all();
-
+        $user = Auth::user();
+        $cart = Cart::where('user_id', $user->id)->with('product')->get();
+        $cartCount = Cart::where('user_id', $user->id)->count();
         return view('editProfile', [
             'user' => $request->user(),
-            'categories' => $categories
+            'categories' => $categories,
+            'cartCount' => $cartCount
         ]);
     }
 
     public function profile(Request $request){
         $categories = Category::all();
-
+        $user = Auth::user();
+        $cart = Cart::where('user_id', $user->id)->with('product')->get();
+        $cartCount = Cart::where('user_id', $user->id)->count();
         return View('profile', [
             'user' => $request->user(),
-            'categories' => $categories
+            'categories' => $categories,
+            'cartCount' =>$cartCount
         ]);
     }
     /**
@@ -39,10 +46,11 @@ class ProfileController extends Controller
     public function update(ProfileUpdateRequest $request)
     {
         $request->user()->fill($request->validated());
-        // dd($request);
         if ($request->user()->isDirty('email')) {
             $request->user()->email_verified_at = null;
         }
+        $request->user()->address = $request->address;
+        $request->user()->contact = $request->contact;
 
         $request->user()->save();
 

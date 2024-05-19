@@ -69,6 +69,11 @@
             {{ session('success') }}
         </div>
     @endif
+    @if (!$errors->isEmpty())
+        <div class="alert alert-danger" style="border-radius: 0;" role="alert">
+            {{ $errors->first() }}
+        </div>
+    @endif
     @if (session('error'))
         <div class="alert alert-danger">
             {{ session('error') }}
@@ -115,6 +120,22 @@
                         <label for="lastname" class="col-md-4 col-form-label text-md-right">Last Name:</label>
                         <div class="col-md-6">
                             <input id="lastname" type="text" class="form-control" value="{{ $user->lastName }}"
+                                readonly>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="address" class="col-md-4 col-form-label text-md-right">Address:</label>
+                        <div class="col-md-6">
+                            <input id="address" type="text" class="form-control" value="{{ $user->address }}"
+                                readonly>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="contact" class="col-md-4 col-form-label text-md-right">Contact:</label>
+                        <div class="col-md-6">
+                            <input id="contact" type="text" class="form-control" value="{{ $user->contact }}"
                                 readonly>
                         </div>
                     </div>

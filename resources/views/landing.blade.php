@@ -32,7 +32,7 @@
                                         {{ $category->categoryName }}</h1>
                                     {{-- <p class="mx-md-5 px-5 animate__animated animate__bounceIn">Lorem rebum magna amet lorem magna erat diam stet. Sadips duo stet amet amet ndiam elitr ipsum diam</p> --}}
                                     <a class="btn btn-outline-light py-2 px-4 mt-3 animate__animated animate__fadeInUp"
-                                        href="/viewCategory/{{$category->id}}">Shop Now</a>
+                                        href="/viewCategory/{{ $category->id }}">Shop Now</a>
                                 </div>
                             </div>
                         </div>
@@ -104,14 +104,14 @@
     <div class="row px-xl-5 pb-3">
         @foreach ($categories as $category)
             <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
-                <a class="text-decoration-none" href="/viewCategory/{{$category->id}}">
+                <a class="text-decoration-none" href="/viewCategory/{{ $category->id }}">
                     <div class="cat-item d-flex align-items-center mb-4">
                         <div class="overflow-hidden" style="width: 100px; height: 100px;">
                             <img class="img-fluid" src="{{ asset($category->imagePath) }}" alt="">
                         </div>
                         <div class="flex-fill pl-3">
                             <h6>{{ $category->categoryName }}</h6>
-                            <small class="text-body"> {{$category->products_count}} Products</small>
+                            <small class="text-body"> {{ $category->products_count }} Products</small>
                         </div>
                     </div>
                 </a>
@@ -127,20 +127,27 @@
 <div class="container-fluid pt-5 pb-3">
     <h2 class="section-title position-relative text-uppercase mx-xl-5 mb-4"><span class="bg-secondary pr-3">Featured
             Products</span></h2>
+            @if ($featured->isEmpty())
+        <div class="alert alert-warning text-center ml-3 mr-3">
+            No products yet
+        </div>
+    @endif
     <div class="row px-xl-5">
         @foreach ($featured as $product)
             <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
                 <div class="product-item bg-light mb-4">
                     <div class="product-img position-relative overflow-hidden">
-                        <img class="img-fluid w-100" src="{{ $product->images->isNotEmpty() && $product->images->first()->imagePath != null ? asset($product->images->first()->imagePath) : asset('img/defaultProduct.png') }}"
-                        alt="Product Image">
+                        <img class="img-fluid w-100"
+                            src="{{ $product->images->isNotEmpty() && $product->images->first()->imagePath != null ? asset($product->images->first()->imagePath) : asset('img/defaultProduct.png') }}"
+                            alt="Product Image">
                         {{-- <img class="img-fluid w-100" src="{{ asset($product->images->first()->imagePath) }}"
                             alt=""> --}}
                         <div class="product-action">
-                            <a class="btn btn-outline-dark btn-square" href="/productDetails/{{$product->id}}"><i
+                            <a class="btn btn-outline-dark btn-square" href="/productDetails/{{ $product->id }}"><i
                                     class="fa fa-shopping-cart"></i></a>
-                            <a class="btn btn-outline-dark btn-square" href="/favoriteProduct/{{$product->id}}"><i class="far fa-heart"></i></a>
-                            <a class="btn btn-outline-dark btn-square" href="/productDetails/{{$product->id}}"><i
+                            <a class="btn btn-outline-dark btn-square" href="/favoriteProduct/{{ $product->id }}"><i
+                                    class="far fa-heart"></i></a>
+                            <a class="btn btn-outline-dark btn-square" href="/productDetails/{{ $product->id }}"><i
                                     class="fa fa-search"></i></a>
                         </div>
                     </div>
@@ -200,19 +207,26 @@
 <div class="container-fluid pt-5 pb-3">
     <h2 class="section-title position-relative text-uppercase mx-xl-5 mb-4"><span class="bg-secondary pr-3">Recent
             Products</span></h2>
+    @if ($recentProducts->isEmpty())
+        <div class="alert alert-warning text-center ml-3 mr-3">
+            No products yet
+        </div>
+    @endif
     <div class="row px-xl-5">
+
         @foreach ($recentProducts as $product)
             <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
                 <div class="product-item bg-light mb-4">
                     <div class="product-img position-relative overflow-hidden">
-                        <img class="img-fluid w-40" src="{{ $product->images->isNotEmpty() && $product->images->first()->imagePath != null ? asset($product->images->first()->imagePath) : asset('img/defaultProduct.png') }}"
-                        alt="Product Image">
+                        <img class="img-fluid w-40"
+                            src="{{ $product->images->isNotEmpty() && $product->images->first()->imagePath != null ? asset($product->images->first()->imagePath) : asset('img/defaultProduct.png') }}"
+                            alt="Product Image">
                         <div class="product-action">
-                            <a class="btn btn-outline-dark btn-square" href="/productDetails/{{$product->id}}"><i
+                            <a class="btn btn-outline-dark btn-square" href="/productDetails/{{ $product->id }}"><i
                                     class="fa fa-shopping-cart"></i></a>
-                            <a class="btn btn-outline-dark btn-square" href="/favoriteProduct/{{$product->id}}"><i
+                            <a class="btn btn-outline-dark btn-square" href="/favoriteProduct/{{ $product->id }}"><i
                                     class="far fa-heart"></i></a>
-                            <a class="btn btn-outline-dark btn-square" href="/productDetails/{{$product->id}}"><i
+                            <a class="btn btn-outline-dark btn-square" href="/productDetails/{{ $product->id }}"><i
                                     class="fa fa-search"></i></a>
                         </div>
                     </div>
@@ -247,10 +261,10 @@
         <div class="col">
             <div class="owl-carousel vendor-carousel">
                 @foreach ($shops as $shop)
-                <a href="/viewShop/{{$shop->id}}">
-                    <div class="bg-light p-4">
-                        <img src="{{ asset($shop->shopLogo) }}" alt="">
-                    </div>
+                    <a href="/viewShop/{{ $shop->id }}">
+                        <div class="bg-light p-4">
+                            <img src="{{ asset($shop->shopLogo) }}" alt="">
+                        </div>
                 @endforeach
             </div>
         </div>

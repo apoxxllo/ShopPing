@@ -6,6 +6,7 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 
@@ -18,6 +19,9 @@ Route::get('/cart', [HomeController::class, 'cart'])->name('cart')->middleware([
 Route::get('/checkout', [HomeController::class, 'checkout'])->name('checkout')->middleware(['auth', 'verified']);
 Route::get('/setupSeller', [HomeController::class, 'setupSeller'])->name('setupSeller')->middleware(['auth', 'verified']);
 Route::get('/viewCategory/{id}', [HomeController::class, 'viewCategory'])->name('viewCategory')->middleware(['auth', 'verified']);
+Route::get('/orderHistory', [HomeController::class, 'orderHistory'])->name('orderHistory')->middleware(['auth', 'verified']);
+Route::get('/notifications', [HomeController::class, 'notifications'])->name('notifications')->middleware(['auth', 'verified']);
+
 
 // CART CONTROLLER ROUTES
 Route::post('/addToCart', [CartController::class, 'addToCart'])->name('addToCart')->middleware(['auth', 'verified']);
@@ -28,18 +32,27 @@ Route::post('/removeFromCart', [CartController::class, 'removeFromCart'])->name(
 
 // PRODUCT CONTROLLER ROUTES
 Route::get('/productDetails/{id}', [ProductController::class, 'productDetails'])->name('productDetails');
-Route::get('/addProduct/{id}', [ProductController::class, 'addProduct'])->name('addProduct');
-Route::post('/addProductPost/{id}', [ProductController::class, 'addProductPost'])->name('addProductPost');
+Route::get('/addProduct/{id}', [ProductController::class, 'addProduct'])->name('addProduct')->middleware(['auth', 'verified']);
+Route::post('/addProductPost/{id}', [ProductController::class, 'addProductPost'])->name('addProductPost')->middleware(['auth', 'verified']);
 
 // PROFILE CONTROLLER ROUTES
 Route::get('/editProfile', [ProfileController::class, 'editProfile'])->name('editProfile')->middleware(['auth', 'verified']);
+
 Route::post('/editProfilePost', [ProfileController::class, 'update'])->name('updateProfile')->middleware(['auth', 'verified']);
 
 
 // SHOP CONTROLLER ROUTES
 Route::post('/setupSeller', [ShopController::class, 'setupSeller'])->name('setupSellerPost')->middleware(['auth', 'verified']);
+
 Route::get('/viewShop/{id}', [ShopController::class, 'viewShop'])->name('viewShop')->middleware(['auth', 'verified']);
 Route::get('/viewYourShop/{id}', [ShopController::class, 'viewYourShop'])->name('viewYourShop')->middleware(['auth', 'verified']);
+
+// ORDER CONTROLLER ROUTES
+Route::post('/placeOrder', [OrderController::class, 'placeOrder'])->name('placeOrder')->middleware(['auth', 'verified']);
+Route::get('/manageOrders/{id}', [OrderController::class, 'manageOrders'])->name('manageOrders')->middleware(['auth', 'verified']);
+
+
+Route::get('/pingSeller/{id}', [OrderController::class, 'pingSeller'])->name('pingSeller')->middleware(['auth', 'verified']);
 
 
 //Auth login register controller
@@ -71,6 +84,14 @@ Route::post('/updateProductAdmin', [AdminController::class, 'updateProductAdmin'
 Route::post('/updateCategory', [AdminController::class, 'updateCategory']) ->name('updateCategory')
     ->middleware(['auth', 'verified', AdminRole::class]);
 Route::post('/addUser', [AdminController::class, 'addUser']) ->name('addUser')
+    ->middleware(['auth', 'verified', AdminRole::class]);
+Route::post('/deleteUser', [AdminController::class, 'deleteUser']) ->name('deleteUser')
+    ->middleware(['auth', 'verified', AdminRole::class]);
+Route::post('/updateUser', [AdminController::class, 'updateUser']) ->name('updateUser')
+    ->middleware(['auth', 'verified', AdminRole::class]);
+Route::post('/updateShop', [AdminController::class, 'updateShop']) ->name('updateShop')
+    ->middleware(['auth', 'verified', AdminRole::class]);
+Route::post('/deleteShop', [AdminController::class, 'deleteShop']) ->name('deleteShop')
     ->middleware(['auth', 'verified', AdminRole::class]);
 
 // Route::get('/', function () {

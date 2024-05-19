@@ -13,11 +13,19 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->integer('orderNumber');
+            $table->integer('orderNumber')->unsigned()->unique();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->foreignId('product_id')->constrained()->onDelete('cascade');
+            $table->string('address');
+            $table->string('details');
+            $table->string('payment');
+            $table->date('estimateDate')->default(now()->addDays(3)->toDateString());
+            $table->string('status')->default('pending');
+            $table->decimal('total', 10, 2);
             $table->timestamps();
         });
+
+        DB::statement('ALTER TABLE orders AUTO_INCREMENT = 1000');
+
     }
 
     /**

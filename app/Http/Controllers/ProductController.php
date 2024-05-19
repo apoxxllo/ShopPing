@@ -23,8 +23,12 @@ class ProductController extends Controller
         ->get();
         $categories = Category::all();
 
-        $user = User::findOrFail(Auth::user()->id);
-        $cartCount = Cart::where('user_id', $user->id)->count();
+        $cartCount = 0;
+
+        if (Auth::check()) {
+            $user = Auth::user();
+            $cartCount = Cart::where('user_id', $user->id)->count();
+        }
 
         return view('Product.productDetails', compact('cartCount'))->with('product', $product)->with('featured', $featured)->with('categories', $categories);
     }

@@ -59,11 +59,17 @@ class ShopController extends Controller
     }
     public function viewYourShop($id)
     {
-        $user = User::findOrFail(Auth::user()->id);
-        $shop = $user->shops()->where('id', $id)->get();
-        if($shop->isEmpty()){
-            return redirect(route('yourShops'))->with('error', 'No shop found');
+        $user = Auth::user();
+        $shop = Shop::find($id);
+        if($shop == null)
+        {
+            return redirect(route('shops'))->with('error', 'Shop does not exist!');
         }
+        if($shop->user_id != $user->id)
+        {
+            return redirect()->back()->with('error', 'Unauthorized access!');
+        }
+
         // print_r($shop);
         $shop = Shop::find($id);
         $products = Product::where('shop_id', $id)->get();

@@ -80,6 +80,56 @@
                 form.submit();
             });
 
+
+            $('.deleteUserBtn').click(function() {
+                $('#deleteUserModal').modal('show');
+                var id = $(this).data('id');
+                var username = $(this).data('username');
+
+                // Set the data attribute 'categoryId' in the confirm delete button
+                $('#confirmDeleteUserBtn').data('userid', id);
+
+                // Set the category name in the modal output
+                $('#output').text('Are you sure you want to delete this user? (' + username + ')');
+            });
+            $('#confirmDeleteUserBtn').click(function() {
+                var userId = $(this).data('userid');
+
+                // Set the hidden input values
+                $('#userId').val(userId);
+
+                var form = $('#deleteUserForm');
+                form.attr('action', '{{ route("deleteUser") }}');
+
+                // Submit the form
+                form.submit();
+            });
+
+            $('.deleteShopBtn').click(function() {
+                $('#deleteShopModal').modal('show');
+                var id = $(this).data('id');
+                var shopName = $(this).data('shopname');
+
+                // Set the data attribute 'categoryId' in the confirm delete button
+                $('#confirmDeleteShopBtn').data('shopid', id);
+
+                // Set the category name in the modal output
+                $('#output').text('Are you sure you want to delete this shop? (' + shopName + ')');
+            });
+
+            $('#confirmDeleteShopBtn').click(function() {
+                var shopId = $(this).data('shopid');
+
+                // Set the hidden input values
+                $('#shopId').val(shopId);
+
+                var form = $('#deleteUserForm');
+                form.attr('action', '{{ route("deleteUser") }}');
+
+                // Submit the form
+                form.submit();
+            });
+
             $('.deleteProductBtn').click(function() {
                 var id = $(this).data('id');
                 var productName = $(this).data('productname');
@@ -124,6 +174,30 @@
                 var id = $(this).data('id');
                 $('#editCategoryName').val(title);
                 $('#categoryIdUpdate').val(id);
+            });
+
+            $('.editUserBtn').click(function() {
+                var username = $(this).data('username');
+                var firstName = $(this).data('firstname');
+                var lastName = $(this).data('lastname');
+                var email = $(this).data('email');
+                var userId = $(this).data('id');
+                $('#userIdUpdate').val(userId);
+                $('#editUserName').val(username);
+                $('#editEmail').val(email);
+                $('#editFirstName').val(firstName);
+                $('#editLastName').val(lastName);
+            });
+
+            $('.editShopBtn').click(function() {
+                var shopName = $(this).data('shopname');
+                var address = $(this).data('address');
+                var description = $(this).data('description');
+                var shopId = $(this).data('id');
+                $('#shopIdUpdate').val(shopId);
+                $('#editShopName').val(shopName);
+                $('#editDescription').val(description);
+                $('#editAddress').val(address);
             });
         </script>
 
