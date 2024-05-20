@@ -22,10 +22,12 @@ class ProfileController extends Controller
         $user = Auth::user();
         $cart = Cart::where('user_id', $user->id)->with('product')->get();
         $cartCount = Cart::where('user_id', $user->id)->count();
+        $notificationsCount = Notification::where('toUser_id', $user->id)->where('status', 'UNREAD')->count();
         return view('editProfile', [
             'user' => $request->user(),
             'categories' => $categories,
-            'cartCount' => $cartCount
+            'cartCount' => $cartCount,
+            'notificationsCount' => $notificationsCount
         ]);
     }
 
@@ -34,10 +36,13 @@ class ProfileController extends Controller
         $user = Auth::user();
         $cart = Cart::where('user_id', $user->id)->with('product')->get();
         $cartCount = Cart::where('user_id', $user->id)->count();
+        $notificationsCount = Notification::where('toUser_id', $user->id)->where('status', 'UNREAD')->count();
+
         return View('profile', [
             'user' => $request->user(),
             'categories' => $categories,
-            'cartCount' =>$cartCount
+            'cartCount' =>$cartCount,
+            'notificationsCount' => $notificationsCount
         ]);
     }
     /**

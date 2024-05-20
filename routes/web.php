@@ -21,6 +21,8 @@ Route::get('/setupSeller', [HomeController::class, 'setupSeller'])->name('setupS
 Route::get('/viewCategory/{id}', [HomeController::class, 'viewCategory'])->name('viewCategory')->middleware(['auth', 'verified']);
 Route::get('/orderHistory', [HomeController::class, 'orderHistory'])->name('orderHistory')->middleware(['auth', 'verified']);
 Route::get('/notifications', [HomeController::class, 'notifications'])->name('notifications')->middleware(['auth', 'verified']);
+Route::get('/favorites', [HomeController::class, 'favorites'])->name('favorites')->middleware(['auth', 'verified']);
+Route::get('/favoriteProduct/{id}', [HomeController::class, 'favoriteProduct'])->name('favoriteProduct')->middleware(['auth', 'verified']);
 
 
 // CART CONTROLLER ROUTES
@@ -34,6 +36,9 @@ Route::post('/removeFromCart', [CartController::class, 'removeFromCart'])->name(
 Route::get('/productDetails/{id}', [ProductController::class, 'productDetails'])->name('productDetails');
 Route::get('/addProduct/{id}', [ProductController::class, 'addProduct'])->name('addProduct')->middleware(['auth', 'verified']);
 Route::post('/addProductPost/{id}', [ProductController::class, 'addProductPost'])->name('addProductPost')->middleware(['auth', 'verified']);
+Route::post('/updateProduct', [ProductController::class, 'updateProduct'])->name('updateProduct')->middleware(['auth', 'verified']);
+Route::post('/addProduct', [ProductController::class, 'addProductFromManage'])->name('addProductFromManage')->middleware(['auth', 'verified']);
+Route::post('/deleteProductPost', [ProductController::class, 'deleteProduct'])->name('deleteProductPost')->middleware(['auth', 'verified']);
 
 // PROFILE CONTROLLER ROUTES
 Route::get('/editProfile', [ProfileController::class, 'editProfile'])->name('editProfile')->middleware(['auth', 'verified']);
@@ -46,17 +51,17 @@ Route::post('/setupSeller', [ShopController::class, 'setupSeller'])->name('setup
 
 Route::get('/viewShop/{id}', [ShopController::class, 'viewShop'])->name('viewShop')->middleware(['auth', 'verified']);
 Route::get('/viewYourShop/{id}', [ShopController::class, 'viewYourShop'])->name('viewYourShop')->middleware(['auth', 'verified']);
+Route::get('/manageProducts/{id}', [ShopController::class, 'manageProducts'])->name('manageProducts')->middleware(['auth', 'verified']);
 
 // ORDER CONTROLLER ROUTES
 Route::post('/placeOrder', [OrderController::class, 'placeOrder'])->name('placeOrder')->middleware(['auth', 'verified']);
+Route::post('/sendOrder/{id}', [OrderController::class, 'sendOrder'])->name('sendOrder')->middleware(['auth', 'verified']);
+Route::post('/receiveOrder/{id}', [OrderController::class, 'receiveOrder'])->name('receiveOrder')->middleware(['auth', 'verified']);
+
 Route::get('/manageOrders/{id}', [OrderController::class, 'manageOrders'])->name('manageOrders')->middleware(['auth', 'verified']);
 
 
 Route::get('/pingSeller/{id}', [OrderController::class, 'pingSeller'])->name('pingSeller')->middleware(['auth', 'verified']);
-
-
-//Auth login register controller
-// Route::post('/loginOrRegister', [AuthenticatedSessionController::class, 'loginOrRegister'])->name('loginOrRegister');
 
 
 // ADMIN CONTROLLER ROUTES

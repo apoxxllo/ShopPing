@@ -190,7 +190,7 @@
                             <a href="/notifications" class="btn px-0">
                                 <i class="fas fa-bell text-primary"></i>
                                 <span class="badge text-secondary border border-secondary rounded-circle"
-                                    style="padding-bottom: 2px;">0</span>
+                                    style="padding-bottom: 2px;">{{$notificationsCount}}</span>
                             </a>
                             <a href="/favorites" class="btn px-0 ml-3">
                                 <i class="fas fa-heart text-primary"></i>

@@ -1,4 +1,4 @@
-@include('layouts.header', ['categories' => $categories, 'cartCount' => $cartCount])
+@include('layouts.header', ['categories' => $categories, 'cartCount' => $cartCount, 'notificationsCount' => $notificationsCount])
 
 <!-- Featured Start -->
 <div class="container-fluid pt-1">
@@ -210,7 +210,7 @@
             <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
                 <div class="product-item bg-light mb-4">
                     <div class="product-img position-relative overflow-hidden">
-                        <img class="img-fluid w-40"
+                        <img class="img-fluid w-100"
                             src="{{ $product->images->isNotEmpty() && $product->images->first()->imagePath != null ? asset($product->images->first()->imagePath) : asset('img/defaultProduct.png') }}"
                             alt="Product Image">
                         <div class="product-action">

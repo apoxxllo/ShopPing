@@ -25,7 +25,7 @@ class AdminController extends Controller
 
     public function products()
     {
-        $products = Product::all();
+        $products = Product::withCount('orders')->get();
         $shops = Shop::all();
         $categories = Category::all();
         return view('productsAdmin', compact('products', 'categories', 'shops'));
@@ -153,6 +153,7 @@ class AdminController extends Controller
             'price' => 'required|numeric|min:1|',
             'category' => 'required|exists:categories,id',
             'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'shop' => 'required|exists:shops,id'
         ]);
 
 

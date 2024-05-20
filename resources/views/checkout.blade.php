@@ -1,4 +1,4 @@
-@include('layouts.header', ['categories' => $categories, 'cartCount' => $cartCount])
+@include('layouts.header', ['categories' => $categories, 'cartCount' => $cartCount, 'notificationsCount' => $notificationsCount])
 
 <form action="{{ route('placeOrder') }}" method="post">
     @csrf

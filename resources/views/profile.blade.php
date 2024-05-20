@@ -1,4 +1,4 @@
-@include('layouts.header', ['categories' => $categories])
+@include('layouts.header', ['categories' => $categories, 'cartCount' => $cartCount, 'notificationsCount' => $notificationsCount])
 <style>
     .edit-button {
         width: 40px;

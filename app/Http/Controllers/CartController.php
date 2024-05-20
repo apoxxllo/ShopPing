@@ -28,6 +28,13 @@ class CartController extends Controller
 
         if($cart->isEmpty())
         {
+            $wholeCart = Cart::where('user_id', $user->id)->get();
+            foreach ($wholeCart as $item) {
+                if($item->product->shop->id != $product->shop->id)
+                {
+                    return redirect()->back()->with('error', 'This product is from a different shop. Clear your cart first.');
+                }
+            }
             Cart::create([
                 'user_id' => $user->id,
                 'product_id' => $product->id,

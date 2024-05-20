@@ -1,64 +1,70 @@
-@include('layouts.header', ['categories' => $categories, 'cartCount' => $cartCount])
+@include('layouts.header', [
+    'categories' => $categories,
+    'cartCount' => $cartCount,
+    'notificationsCount' => $notificationsCount,
+])
 <style>
     /* === removing default button style ===*/
-.buttonpma {
-  margin: 0;
-  height: auto;
-  background: transparent;
-  padding: 0;
-  border: none;
-  animation: r1 3s ease-in-out infinite;
- /*linear*/
-  border: 7px #056bfa21 solid;
-  border-radius: 14px;
-}
+    .buttonpma {
+        margin: 0;
+        height: auto;
+        background: transparent;
+        padding: 0;
+        border: none;
+        animation: r1 3s ease-in-out infinite;
+        /*linear*/
+        border: 7px #056bfa21 solid;
+        border-radius: 14px;
+    }
 
-/* button styling */
-.buttonpma {
-  --border-right: 6px;
-  --text-stroke-color: rgba(85, 87, 255, 0.78);
-  --animation-color: #056bfa;
-  --fs-size: 2em;
-  letter-spacing: 3px;
-  text-decoration: none;
-  font-size: var(--fs-size);
-  font-family: "Arial";
-  position: relative;
-  text-transform: uppercase;
-  color: transparent;
-  -webkit-text-stroke: 1px var(--text-stroke-color);
-}
-/* this is the text, when you hover on button */
-.hover-text {
-  position: absolute;
-  box-sizing: border-box;
-  content: attr(data-text);
-  color: var(--animation-color);
-  width: 0%;
-  inset: 0;
-  border-right: var(--border-right) solid var(--animation-color);
-  overflow: hidden;
-  transition: 1.5s;
-  -webkit-text-stroke: 1px var(--animation-color);
-  animation: r2 2s ease-in-out infinite;
-}
-/* hover */
-.buttonpma:hover .hover-text {
-  width: 100%;
-  filter: drop-shadow(0 0 70px var(--animation-color))
-}
+    /* button styling */
+    .buttonpma {
+        --border-right: 6px;
+        --text-stroke-color: rgba(85, 87, 255, 0.78);
+        --animation-color: #056bfa;
+        --fs-size: 2em;
+        letter-spacing: 3px;
+        text-decoration: none;
+        font-size: var(--fs-size);
+        font-family: "Arial";
+        position: relative;
+        text-transform: uppercase;
+        color: transparent;
+        -webkit-text-stroke: 1px var(--text-stroke-color);
+    }
 
-@keyframes r1 {
-  50% {
-    transform: rotate(-1deg) rotateZ(-10deg);
-  }
-}
+    /* this is the text, when you hover on button */
+    .hover-text {
+        position: absolute;
+        box-sizing: border-box;
+        content: attr(data-text);
+        color: var(--animation-color);
+        width: 0%;
+        inset: 0;
+        border-right: var(--border-right) solid var(--animation-color);
+        overflow: hidden;
+        transition: 1.5s;
+        -webkit-text-stroke: 1px var(--animation-color);
+        animation: r2 2s ease-in-out infinite;
+    }
 
-@keyframes r2 {
-  50% {
-    transform: rotateX(-65deg);
-  }
-}
+    /* hover */
+    .buttonpma:hover .hover-text {
+        width: 100%;
+        filter: drop-shadow(0 0 70px var(--animation-color))
+    }
+
+    @keyframes r1 {
+        50% {
+            transform: rotate(-1deg) rotateZ(-10deg);
+        }
+    }
+
+    @keyframes r2 {
+        50% {
+            transform: rotateX(-65deg);
+        }
+    }
 </style>
 <div class="container mt-5">
     @if (session('error'))
@@ -151,12 +157,35 @@
                                     <td>Php {{ number_format($order->total, 2) }}</td>
                                     <td>{{ $order->estimateDate }}</td>
                                     <td>
-                                        <a href="/pingSeller/{{ $order->id }}">
-                                            <button data-text="Awesome" class="buttonpma">
-                                                <span class="actual-text">&nbsp;Ping Seller&nbsp;</span>
-                                                <span class="hover-text" aria-hidden="true">&nbsp;Ping&nbsp;</span>
-                                            </button>
-                                        </a>
+                                        @if ($order->status == 'ON THE WAY')
+                                            <form id="receiveOrderForm-{{ $order->id }}"
+                                                action="/receiveOrder/{{ $order->id }}" method="POST"
+                                                style="display: inline;">
+                                                @csrf
+                                                <button type="button" data-text="Awesome" class="buttonpma"
+                                                    onclick="confirmReceiveOrder({{ $order->id }})">
+                                                    <span class="actual-text">&nbsp;RECEIVED?&nbsp;</span>
+                                                    <span class="hover-text"
+                                                        aria-hidden="true">&nbsp;received?&nbsp;</span>
+                                                </button>
+                                            </form>
+                                        @elseif ($order->status == 'PENDING')
+                                            <a href="/pingSeller/{{ $order->id }}">
+                                                <button data-text="Awesome" class="buttonpma">
+                                                    <span class="actual-text">&nbsp;Ping Seller&nbsp;</span>
+                                                    <span class="hover-text" aria-hidden="true">&nbsp;Ping&nbsp;</span>
+                                                </button>
+                                            </a>
+                                        @elseif ($order->status == 'RECEIVED')
+                                            <a href="#">
+                                                <button data-text="Awesome" class="buttonpma">
+                                                    <span class="actual-text">&nbsp;Received&nbsp;</span>
+                                                    <span class="hover-text" aria-hidden="true">&nbsp;Enjoy :)&nbsp;</span>
+                                                </button>
+                                            </a>
+                                        @endif
+
+
                                     </td>
                                 </tr>
                             @endforeach
@@ -174,4 +203,11 @@
 
 </div>
 
+<script>
+    function confirmReceiveOrder(orderId) {
+        if (confirm('Are you sure you have received this order?')) {
+            document.getElementById('receiveOrderForm-' + orderId).submit();
+        }
+    }
+</script>
 @include('layouts.footer')

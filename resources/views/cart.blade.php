@@ -1,4 +1,4 @@
-@include('layouts.header', ['categories' => $categories, 'cartCount' => $cartCount])
+@include('layouts.header', ['categories' => $categories, 'cartCount' => $cartCount, 'notificationsCount' => $notificationsCount])
 
 <!-- Cart Start -->
 <div class="container-fluid">

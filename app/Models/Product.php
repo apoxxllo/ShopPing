@@ -6,7 +6,9 @@ use App\Models\Cart;
 use App\Models\Shop;
 use App\Models\Order;
 use App\Models\Category;
+use App\Models\ProductImage;
 use App\Models\OrderedProduct;
+use App\Models\FavoriteProduct;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -30,6 +32,10 @@ class Product extends Model
     {
         return $this->hasMany(OrderedProduct::class);
     }
+    public function favorites()
+    {
+        return $this->hasMany(FavoriteProduct::class);
+    }
     public function category()
     {
         return $this->belongsTo(Category::class);
@@ -37,6 +43,10 @@ class Product extends Model
     public function shop()
     {
         return $this->belongsTo(Shop::class);
+    }
+    public function carts()
+    {
+        return $this->hasMany(Cart::class);
     }
 
 

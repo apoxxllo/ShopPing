@@ -1,4 +1,4 @@
-@include('layouts.header', ['categories' => $categories, 'cartCount' => $cartCount])
+@include('layouts.header', ['categories' => $categories, 'cartCount' => $cartCount, 'notificationsCount' => $notificationsCount])
 {{$itemStock = $product->stock}}
     <!-- Product Detail Start -->
     <div class="container-fluid pb-5">

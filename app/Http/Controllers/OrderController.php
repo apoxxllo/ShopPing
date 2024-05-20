@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\Category;
+use App\Mail\SendOrderMail;
 use App\Models\Notification;
 use App\Models\OrderHistory;
 use Illuminate\Http\Request;
@@ -17,6 +18,7 @@ use App\Models\OrderedProduct;
 use App\Http\Controllers\Controller;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 class OrderController extends Controller
 {
@@ -118,6 +120,7 @@ class OrderController extends Controller
         $cartCount = Cart::where('user_id', $user->id)->count();
         $orders = OrderedProduct::select('orderNumber', 'product_id', 'order_id')
                 ->groupBy('orderNumber', 'product_id', 'order_id')->get();
+        $notificationsCount = Notification::where('toUser_id', $user->id)->where('status', 'UNREAD')->count();
 
         $orderHistoriesData = [];
         foreach($orders as $order)
@@ -139,6 +142,51 @@ class OrderController extends Controller
         }
 
         $orderHistoriesData = new Paginator($orderHistoriesData, 10);
-        return view('manageOrders',compact('cartCount', 'categories', 'orderHistoriesData'));
+        return view('manageOrders',compact('notificationsCount','cartCount', 'categories', 'orderHistoriesData'));
     }
+
+    public function sendOrder($id)
+    {
+        $order = Order::findOrFail($id);
+        $orderedProduct = OrderedProduct::where('orderNumber', $id)->first();
+        $user = Auth::user();
+        // dd($orderedProduct->product->shop->user->id);
+        // dd($orderedProduct);
+        if($orderedProduct->product->shop->user->id != $user->id)
+        {
+            return redirect()->back()->with('error', 'Unauthorized access!');
+        }
+
+        $order->status = "ON THE WAY";
+
+        $order->save();
+        $dateTime = new DateTime("now", new DateTimeZone("Asia/Shanghai")); // UTC+8 timezone
+        $notification = Notification::create([
+            'fromUser_id' => $user->id,
+            'orderNumber' => $order->orderNumber,
+            'toUser_id' => $order->user->id,
+            'created_at' => $dateTime->format('Y-m-d h:i:s a'),
+            'description' => 'Seller ' . $user->username . ' has delivered your order, Order#' . $order->id . '. Order Details: ' . $order->details
+        ]);
+        $body = 'Seller ' . $user->username . ' has delivered your order, Order#' . $order->id . '. Order Details: ' . $order->details;
+
+        Mail::to($order->user->email)->send(new SendOrderMail($body));
+
+        return redirect()->back()->with('success', 'Successfully sent the order for delivery!');
+    }
+
+    public function receiveOrder($id)
+    {
+        $order = Order::findOrFail($id);
+        $user = Auth::user();
+        if($order->user_id != $user->id)
+        {
+            return redirect()->back()->with('error', 'Unauthorized access!');
+        }
+        $order->status = "RECEIVED";
+
+        $order->save();
+        return redirect()->back()->with('success', 'Successfully received the order! Enjoy!');
+    }
+
 }

@@ -1,4 +1,4 @@
-@include('layouts.header', ['categories' => $categories])
+@include('layouts.header', ['categories' => $categories, 'cartCount' => $cartCount, 'notificationsCount' => $notificationsCount])
 
 <div class="container-fluid pb-5">
     <div class="row px-xl-5">
@@ -50,8 +50,9 @@
                                     src="{{ $product->images->isNotEmpty() && $product->images->first()->imagePath != null ? asset($product->images->first()->imagePath) : asset('img/defaultProduct.png') }}"
                                     alt="Product Image">
                                 <div class="card-body">
-                                    <h5 class="card-title">{{ $product->name }}</h5>
-                                    <p class="card-text">{{ $product->description }}</p>
+                                    <h5 class="card-title text-center">{{ $product->name }}</h5>
+                                    <p class="card-text text-center">{{ $product->description }}</p>
+                                    <p class="card-text text-center">Sales: {{ $product->orders_count }}</p>
                                     <a href="/productDetails/{{ $product->id }}" class="btn btn-primary">View
                                         Details</a>
                                 </div>

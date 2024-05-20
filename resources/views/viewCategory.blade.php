@@ -1,6 +1,21 @@
-@include('layouts.header', ['categories' => $categories])
+@include('layouts.header', ['categories' => $categories, 'cartCount' => $cartCount, 'notificationsCount' => $notificationsCount])
 
 <div class="container-fluid pt-1">
+    @if (session('error'))
+        <div class="alert alert-danger" style="border-radius: 0;" role="alert">
+            {{ session('error') }}
+        </div>
+    @endif
+    @if (!$errors->isEmpty())
+        <div class="alert alert-danger" style="border-radius: 0;" role="alert">
+            {{ $errors->first() }}
+        </div>
+    @endif
+    @if (session('success'))
+        <div class="alert alert-success" style="border-radius: 0;" role="alert">
+            {{ session('success') }}
+        </div>
+    @endif
     <h1 class="ml-5">Products in Category {{ $category->categoryName }}</h1>
     @if ($products->isEmpty())
         <div class="alert alert-warning ml-5 mr-5 text-center">
@@ -11,12 +26,12 @@
             @foreach ($products as $product)
                 <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
                     <div class="product-item bg-light mb-4">
-                        <div class="product-img position-relative overflow-hidden">
-                            <img class="img-fluid w-40"
+                        <div class="product-img position-overflow-hidden">
+                            <img class="img-fluid w-100"
                                 src="{{ $product->images->isNotEmpty() && $product->images->first()->imagePath != null ? asset($product->images->first()->imagePath) : asset('img/defaultProduct.png') }}"
                                 alt="Product Image">
                             <div class="product-action">
-                                <a class="btn btn-outline-dark btn-square" href=""><i
+                                <a class="btn btn-outline-dark btn-square" href="/favoriteProduct/{{$product->id}}"><i
                                         class="far fa-heart"></i></a>
                                 {{-- <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-sync-alt"></i></a> --}}
                                 <a class="btn btn-outline-dark btn-square" href="/productDetails/{{ $product->id }}"><i
@@ -36,7 +51,7 @@
                                 <small class="fa fa-star text-primary mr-1"></small>
                                 <small class="fa fa-star text-primary mr-1"></small>
                                 <small class="fa fa-star text-primary mr-1"></small>
-                                <small>Sales: (99)</small>
+                                <small style="color:black;">Sales: ({{$product->orders_count}})</small>
                             </div>
                         </div>
                     </div>
@@ -201,7 +216,7 @@
             <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
                 <div class="product-item bg-light mb-4">
                     <div class="product-img position-relative overflow-hidden">
-                        <img class="img-fluid w-40"
+                        <img class="img-fluid w-100"
                             src="{{ $product->images->isNotEmpty() && $product->images->first()->imagePath != null ? asset($product->images->first()->imagePath) : asset('img/defaultProduct.png') }}"
                             alt="Product Image">
                         <div class="product-action">
