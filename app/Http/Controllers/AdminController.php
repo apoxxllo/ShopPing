@@ -2,13 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\Shop;
 use App\Models\User;
+use App\Models\Order;
 use App\Models\Product;
 use App\Models\Category;
+use App\Models\ShopSales;
+use App\Models\ShopReviews;
 use Illuminate\Support\Str;
 use App\Models\ProductImage;
 use Illuminate\Http\Request;
+use App\Models\CustomerReview;
+use App\Models\OrderedProduct;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules;
 use App\Http\Controllers\Controller;
@@ -20,7 +26,37 @@ class AdminController extends Controller
 {
     public function index()
     {
-        return view('adminDashboard');
+        $productsSold = OrderedProduct::all()->count();
+        $totalAmount = Order::all()->sum('total');
+        $totalUsers = User::all()->count();
+        $earningThisMonth = Order::where('created_at', '>=', Carbon::now()->subDays(30))->sum('total');
+
+        $shops = Shop::all();
+        $uniqueOrderedProducts = OrderedProduct::select('orderNumber','product_id', 'order_id')->distinct()->groupBy('orderNumber', 'product_id', 'order_id')->get();
+        $shopDataDashboard = [];
+        // dd($uniqueOrderedProducts);
+        foreach($shops as $shop)
+        {
+            $sales = 0;
+            foreach($uniqueOrderedProducts as $order)
+            {
+                if($order->product->shop->id == $shop->id)
+                {
+                    $sales += $order->order->total;
+                }
+            }
+            $shopData = new ShopSales(
+                $shop->shopName,
+                $sales
+            );
+            $shopDataDashboard[] = $shopData;
+        }
+
+        $satisfactionProduct = CustomerReview::avg('rating');
+        $satisfactionShop = ShopReviews::avg('rating');
+
+        $satisfaction = ($satisfactionProduct + $satisfactionShop) / 10 * 100;
+        return view('adminDashboard', compact('satisfaction','shopDataDashboard','earningThisMonth','productsSold', 'totalAmount', 'totalUsers'));
     }
 
     public function products()

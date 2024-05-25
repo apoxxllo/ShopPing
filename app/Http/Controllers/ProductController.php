@@ -11,6 +11,7 @@ use Illuminate\Support\Str;
 use App\Models\Notification;
 use App\Models\ProductImage;
 use Illuminate\Http\Request;
+use App\Models\CustomerReview;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
@@ -18,7 +19,7 @@ class ProductController extends Controller
 {
     public function productDetails($id)
     {
-        $product = Product::find($id);
+        $product = Product::where('id', $id)->withCount('orders')->first();
         $featured = Product::where('shop_id', $product->shop_id)
         ->where('id', '!=', $product->id)
         ->get();
@@ -26,13 +27,18 @@ class ProductController extends Controller
 
         $cartCount = 0;
         $notificationsCount = 0;
+        $favoritesCount = 0;
         if (Auth::check()) {
             $user = Auth::user();
             $cartCount = Cart::where('user_id', $user->id)->count();
             $notificationsCount = Notification::where('toUser_id', $user->id)->where('status', 'UNREAD')->count();
+            $favoriteProductsCount = User::where('id', $user->id)->withCount('favoriteProducts')->first();
+            $favoriteShopsCount = User::where('id', $user->id)->withCount('favoriteShops')->first();
+            $favoritesCount = $favoriteProductsCount->favorite_products_count + $favoriteShopsCount->favorite_shops_count;
         }
-
-        return view('Product.productDetails', compact('cartCount', 'notificationsCount'))->with('product', $product)->with('featured', $featured)->with('categories', $categories);
+        $reviews = CustomerReview::with('user')->where('product_id', $id)->paginate(10);
+        $reviewsCount = CustomerReview::with('user')->where('product_id', $id)->count();
+        return view('Product.productDetails', compact('reviews', 'reviewsCount','favoritesCount','cartCount', 'notificationsCount'))->with('product', $product)->with('featured', $featured)->with('categories', $categories);
     }
 
     public function updateProduct(Request $request)
@@ -109,8 +115,10 @@ class ProductController extends Controller
         $user = User::findOrFail(Auth::user()->id);
         $cartCount = Cart::where('user_id', $user->id)->count();
         $notificationsCount = Notification::where('toUser_id', $user->id)->where('status', 'UNREAD')->count();
-
-        return view('Product.addProduct', compact('cartCount', 'notificationsCount'))->with('shop', $shop)->with('categories', $categories);
+        $favoriteProductsCount = User::where('id', $user->id)->withCount('favoriteProducts')->first();
+        $favoriteShopsCount = User::where('id', $user->id)->withCount('favoriteShops')->first();
+        $favoritesCount = $favoriteProductsCount->favorite_products_count + $favoriteShopsCount->favorite_shops_count;
+        return view('Product.addProduct', compact('favoritesCount','cartCount', 'notificationsCount'))->with('shop', $shop)->with('categories', $categories);
     }
 
     public function addProductFromManage(Request $request)
@@ -201,5 +209,50 @@ class ProductController extends Controller
         // return redirect('productDetails', $product->id);
         return redirect()->route('viewYourShop', $id)->with('success', 'Product created successfully!');
 
+    }
+
+    public function reviewProduct(Request $request, $id)
+    {
+        $product = Product::findOrFail($id);
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'star' => 'required|integer|min:1|max:5',
+            'comment' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255'
+        ]);
+        $user = Auth::user();
+        $review = CustomerReview::create([
+            'user_id' => $user->id,
+            'product_id' => $product->id,
+            'comment' => $validatedData['comment'],
+            'rating' => $validatedData['star']
+        ]);
+
+        return redirect()->back()->with('success', 'Successfully reviewed this shop!');
+    }
+
+    public function search(Request $request)
+    {
+        $query = $request->input('query');
+        $categories = Category::all();
+
+        $cartCount = 0;
+        $notificationsCount = 0;
+        $favoritesCount = 0;
+        if (Auth::check()) {
+            $user = Auth::user();
+            $cartCount = Cart::where('user_id', $user->id)->count();
+            $notificationsCount = Notification::where('toUser_id', $user->id)->where('status', 'UNREAD')->count();
+            $favoriteProductsCount = User::where('id', $user->id)->withCount('favoriteProducts')->first();
+            $favoriteShopsCount = User::where('id', $user->id)->withCount('favoriteShops')->first();
+            $favoritesCount = $favoriteProductsCount->favorite_products_count + $favoriteShopsCount->favorite_shops_count;
+        }
+        // Search products based on the query
+        $products = Product::where('name', 'LIKE', "%{$query}%")
+                            ->orWhere('description', 'LIKE', "%{$query}%")->withCount('reviews')
+                            ->get();
+        // dd($products);
+        // Return the view with search results
+        return view('searchResults', compact('products', 'query', 'favoritesCount', 'categories', 'cartCount', 'notificationsCount'));
     }
 }

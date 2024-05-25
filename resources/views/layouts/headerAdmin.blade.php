@@ -82,7 +82,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="header-right">
+                {{-- <div class="header-right">
                     <ul class="clearfix">
                         <li class="icons dropdown"><a href="javascript:void(0)" data-toggle="dropdown">
                                 <i class="mdi mdi-email-outline"></i>
@@ -142,7 +142,8 @@
                                 </div>
                             </div>
                         </li>
-                        <li class="icons dropdown"><a href="javascript:void(0)" data-toggle="dropdown">
+                        <li class="icons dropdown">
+                            <a href="javascript:void(0)" data-toggle="dropdown">
                                 <i class="mdi mdi-bell-outline"></i>
                                 <span class="badge badge-pill gradient-2">3</span>
                             </a>
@@ -236,7 +237,7 @@
                             </div>
                         </li>
                     </ul>
-                </div>
+                </div> --}}
             </div>
         </div>
         <!--**********************************
@@ -303,7 +304,7 @@
                                 onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                 Log Out
                             </a></li>
-                            <li><a href="register.php">Register an Admin</a></li>
+                            {{-- <li><a href="register.php">Register an Admin</a></li> --}}
                         </ul>
                     </li>
                 </ul>

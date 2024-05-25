@@ -2,7 +2,9 @@
     'categories' => $categories,
     'cartCount' => $cartCount,
     'notificationsCount' => $notificationsCount,
+    'favoritesCount' => $favoritesCount,
 ])
+
 
 <div class="container-fluid pt-1">
     @if (session('error'))
@@ -32,14 +34,14 @@
                     <div class="product-item bg-light mb-4">
                         <div class="product-img position-relative overflow-hidden">
                             <img class="img-fluid w-100"
-                            src="{{ !$product->product->images->isEmpty() && $product->product->images->first()->imagePath != null ? asset($product->product->images->first()->imagePath) : asset('img/defaultProduct.png') }}"
-                            alt="Product Image">
+                                src="{{ !$product->product->images->isEmpty() && $product->product->images->first()->imagePath != null ? asset($product->product->images->first()->imagePath) : asset('img/defaultProduct.png') }}"
+                                alt="Product Image">
                             <div class="product-action">
-                                <a class="btn btn-outline-dark btn-square active" href="/favoriteProduct/{{$product->product->id}}"><i
-                                        class="far fa-heart"></i></a>
+                                <a class="btn btn-outline-dark btn-square active"
+                                    href="/favoriteProduct/{{ $product->product->id }}"><i class="far fa-heart"></i></a>
                                 {{-- <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-sync-alt"></i></a> --}}
-                                <a class="btn btn-outline-dark btn-square" href="/productDetails/{{ $product->product->id }}"><i
-                                        class="fa fa-search"></i></a>
+                                <a class="btn btn-outline-dark btn-square"
+                                    href="/productDetails/{{ $product->product->id }}"><i class="fa fa-search"></i></a>
                             </div>
                         </div>
                         <div class="text-center py-4">
@@ -72,36 +74,36 @@
     @else
         <div class="row px-xl-5 ml-3">
             @foreach ($favoriteShops as $shop)
-            <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
-                <div class="product-item bg-light mb-4">
-                    <div class="product-img position-relative overflow-hidden">
-                        <img class="img-fluid w-100" src="{{ $shop->shopLogo }}" alt="Shop Logo">
-                        <div class="product-action">
-                            <a class="btn btn-outline-dark btn-square active" href="/favoriteShop/{{ $shop->id }}"><i
-                                    class="far fa-heart"></i></a>
-                            {{-- <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-sync-alt"></i></a> --}}
-                            <a class="btn btn-outline-dark btn-square" href="/viewShop/{{ $shop->id }}"><i
-                                    class="fa fa-search"></i></a>
+                <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
+                    <div class="product-item bg-light mb-4">
+                        <div class="product-img position-relative overflow-hidden">
+                            <img class="img-fluid w-100" src="{{ $shop->shop->shopLogo }}" alt="Shop Logo">
+                            <div class="product-action">
+                                <a class="btn btn-outline-dark btn-square active"
+                                    href="/favoriteShop/{{ $shop->shop->id }}"><i class="far fa-heart"></i></a>
+                                {{-- <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-sync-alt"></i></a> --}}
+                                <a class="btn btn-outline-dark btn-square" href="/viewShop/{{ $shop->shop->id }}"><i
+                                        class="fa fa-search"></i></a>
+                            </div>
                         </div>
-                    </div>
-                    <div class="text-center py-4">
-                        <a class="h6 text-decoration-none text-truncate"
-                            href="/viewShop/{{ $shop->id }}">{{ $shop->shopName }}</a>
-                        <div class="d-flex align-items-center justify-content-center mt-2">
-                            <h5>Shop by: {{ $shop->user->username }}</h5>
-                            {{-- <h6 class="text-muted ml-2"><del>$123.00</del></h6> --}}
-                        </div>
-                        <div class="d-flex align-items-center justify-content-center mb-1">
-                            <small class="fa fa-star text-primary mr-1"></small>
-                            <small class="fa fa-star text-primary mr-1"></small>
-                            <small class="fa fa-star text-primary mr-1"></small>
-                            <small class="fa fa-star text-primary mr-1"></small>
-                            <small class="fa fa-star text-primary mr-1"></small>
-                            <small>Sales: (99)</small>
+                        <div class="text-center py-4">
+                            <a class="h6 text-decoration-none text-truncate"
+                                href="/viewShop/{{ $shop->shop->id }}">{{ $shop->shop->shopName }}</a>
+                            <div class="d-flex align-items-center justify-content-center mt-2">
+                                <h5>Shop by: {{ $shop->shop->user->username }}</h5>
+                                {{-- <h6 class="text-muted ml-2"><del>$123.00</del></h6> --}}
+                            </div>
+                            <div class="d-flex align-items-center justify-content-center mb-1">
+                                <small class="fa fa-star text-primary mr-1"></small>
+                                <small class="fa fa-star text-primary mr-1"></small>
+                                <small class="fa fa-star text-primary mr-1"></small>
+                                <small class="fa fa-star text-primary mr-1"></small>
+                                <small class="fa fa-star text-primary mr-1"></small>
+                                {{-- <small>Sales: (99)</small> --}}
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
             @endforeach
         </div>
     @endif

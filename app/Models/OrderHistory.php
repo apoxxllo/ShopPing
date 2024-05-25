@@ -13,8 +13,9 @@ class OrderHistory
     public $status;
     public $estimateDate;
     public $total;
+    public $shopName;
 
-    public function __construct($orderNumber, $orderedProducts, $status, $estimateDate, $total, $id)
+    public function __construct($orderNumber, $orderedProducts, $status, $estimateDate, $total, $id, $shopName)
     {
         $this->orderNumber = $orderNumber;
         $this->orderedProducts = $orderedProducts;
@@ -22,7 +23,7 @@ class OrderHistory
         $this->estimateDate = $estimateDate;
         $this->total = $total;
         $this->id = $id;
-
+        $this->shopName = $shopName;
     }
 }
 

@@ -2,7 +2,9 @@
     'categories' => $categories,
     'cartCount' => $cartCount,
     'notificationsCount' => $notificationsCount,
+    'favoritesCount' => $favoritesCount,
 ])
+
 <style>
     /* === removing default button style ===*/
     .buttonpma {
@@ -127,6 +129,7 @@
                                                         </button>
                                                     </div>
                                                     <div class="modal-body">
+                                                        <h3>Bought from shop: {{ $order->shopName }} </h3>
                                                         <div class="row">
                                                             @foreach ($order->orderedProducts as $product)
                                                                 <div class="col-md-4 mb-3">
@@ -180,7 +183,8 @@
                                             <a href="#">
                                                 <button data-text="Awesome" class="buttonpma">
                                                     <span class="actual-text">&nbsp;Received&nbsp;</span>
-                                                    <span class="hover-text" aria-hidden="true">&nbsp;Enjoy :)&nbsp;</span>
+                                                    <span class="hover-text" aria-hidden="true">&nbsp;Enjoy
+                                                        :)&nbsp;</span>
                                                 </button>
                                             </a>
                                         @endif
@@ -191,7 +195,7 @@
                             @endforeach
                         </tbody>
                     </table>
-
+                    <h2>Total amount spent: Php {{ number_Format($totalSpent, 2) }}</h2>
                     <!-- Pagination if needed -->
                     <div class="d-flex justify-content-center">
                         {{ $orderHistoriesData->links() }}

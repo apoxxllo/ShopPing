@@ -322,9 +322,7 @@
                                                                 <span style="line-height: 27.3px;"><span
                                                                         style="line-height: 27.3px;"><span
                                                                             style="line-height: 27.3px;"><span
-                                                                                style="line-height: 27.3px;"><strong>Order
-                                                                                    confirmed and sent by
-                                                                                    Seller</strong><br /></span></span></span></span>
+                                                                                style="line-height: 27.3px;"><strong>{{$header}}</strong><br /></span></span></span></span>
                                                             </h1>
                                                             <!--[if mso]></td></tr></table><![endif]-->
 

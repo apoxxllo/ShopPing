@@ -41,10 +41,11 @@ class OrderController extends Controller
 
         $maxOrderNumber = Order::max('orderNumber');
         $nextOrderNumber = $maxOrderNumber ? $maxOrderNumber + 1 : 1000;
-
+        $shopId = 0;
         foreach ($cart as $item) {
             $total = $total + ($item->product->price * $item->quantity);
             $details .= $item->product->name . ' x' . $item->quantity . "\n";
+            $shopId = $item->product->shop->id;
         }
 
 
@@ -74,6 +75,19 @@ class OrderController extends Controller
             $item->delete();
         }
 
+        $shop = Shop::findOrFail($shopId);
+        $dateTime = new DateTime("now", new DateTimeZone("Asia/Shanghai")); // UTC+8 timezone
+        $notification = Notification::create([
+            'fromUser_id' => $user->id,
+            'orderNumber' => $order->orderNumber,
+            'toUser_id' => $shop->user->id,
+            'created_at' => $dateTime->format('Y-m-d h:i:s a'),
+            'description' => 'Customer ' . $user->username . ' has ordered from your shop ' . $shop->shopName . ', Order#' . $order->id . '. Order Details: ' . $order->details
+        ]);
+        $body = 'Seller ' . $user->username . ' has delivered your order, Order#' . $order->id . '. Order Details: ' . $order->details;
+        $header = 'A new order in your shop ' . $shop->shopName . ' by Customer ' . $user->username;
+        Mail::to($shop->user->email)->send(new SendOrderMail($header, $body));
+
         return redirect(route('orderHistory'))->with('success', 'Order successfully placed');
     }
 
@@ -83,8 +97,8 @@ class OrderController extends Controller
         $orderProduct = OrderedProduct::where('orderNumber', $id)->first();
         $order = Order::find($id);
 
-        $alreadyPinged = Notification::where('orderNumber', $order->orderNumber)->get();
-        if(!$alreadyPinged->isEmpty())
+        $alreadyPinged = Notification::where('orderNumber', $order->orderNumber)->count();
+        if($alreadyPinged > 1)
         {
             return redirect()->back()->with('error', 'You have already pinged the seller!');
         }
@@ -121,7 +135,9 @@ class OrderController extends Controller
         $orders = OrderedProduct::select('orderNumber', 'product_id', 'order_id')
                 ->groupBy('orderNumber', 'product_id', 'order_id')->get();
         $notificationsCount = Notification::where('toUser_id', $user->id)->where('status', 'UNREAD')->count();
-
+        $favoriteProductsCount = User::where('id', $user->id)->withCount('favoriteProducts')->first();
+        $favoriteShopsCount = User::where('id', $user->id)->withCount('favoriteShops')->first();
+        $favoritesCount = $favoriteProductsCount->favorite_products_count + $favoriteShopsCount->favorite_shops_count;
         $orderHistoriesData = [];
         foreach($orders as $order)
         {
@@ -135,14 +151,15 @@ class OrderController extends Controller
                     $order1['status'],
                     $order1['estimateDate'],
                     $order1['total'],
-                    $order1['id']
+                    $order1['id'],
+                    $orderedProducts->first()->product->shop->shopName
                 );
                 $orderHistoriesData[] = $orderHistory;
             }
         }
 
         $orderHistoriesData = new Paginator($orderHistoriesData, 10);
-        return view('manageOrders',compact('notificationsCount','cartCount', 'categories', 'orderHistoriesData'));
+        return view('manageOrders',compact('favoritesCount','notificationsCount','cartCount', 'categories', 'orderHistoriesData'));
     }
 
     public function sendOrder($id)
@@ -169,8 +186,9 @@ class OrderController extends Controller
             'description' => 'Seller ' . $user->username . ' has delivered your order, Order#' . $order->id . '. Order Details: ' . $order->details
         ]);
         $body = 'Seller ' . $user->username . ' has delivered your order, Order#' . $order->id . '. Order Details: ' . $order->details;
+        $header = 'Order #' . $order->id.' has been confirmed by seller ' . $user->username . ' from shop ' . $orderedProduct->product->shop->shopName . ' and is on the way now! Order Details: ' . $order->details;
 
-        Mail::to($order->user->email)->send(new SendOrderMail($body));
+        Mail::to($order->user->email)->send(new SendOrderMail($header, $body));
 
         return redirect()->back()->with('success', 'Successfully sent the order for delivery!');
     }
@@ -186,6 +204,20 @@ class OrderController extends Controller
         $order->status = "RECEIVED";
 
         $order->save();
+
+        $orderedProduct = OrderedProduct::where('orderNumber', $id)->first();
+
+        $dateTime = new DateTime("now", new DateTimeZone("Asia/Shanghai")); // UTC+8 timezone
+        $notification = Notification::create([
+            'fromUser_id' => $user->id,
+            'orderNumber' => $order->orderNumber,
+            'toUser_id' => $orderedProduct->product->shop->user->id,
+            'created_at' => $dateTime->format('Y-m-d h:i:s a'),
+            'description' => 'Customer ' . $user->username . ' has succesfully received the item from your shop ' . $orderedProduct->product->shop->shopName . ', Order#' . $order->id . '. Order Details: ' . $order->details
+        ]);
+        $body = 'Customer ' . $user->username . ' has received your order, Order#' . $order->id . '. Order Details: ' . $order->details;
+        $header = 'Their payment will automatically be added into your Account. Thank you!';
+        Mail::to($orderedProduct->product->shop->user->email)->send(new SendOrderMail($header, $body));
         return redirect()->back()->with('success', 'Successfully received the order! Enjoy!');
     }
 

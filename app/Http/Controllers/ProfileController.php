@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cart;
+use App\Models\User;
 use App\Models\Category;
 use Illuminate\View\View;
+use App\Models\Notification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
@@ -23,11 +25,15 @@ class ProfileController extends Controller
         $cart = Cart::where('user_id', $user->id)->with('product')->get();
         $cartCount = Cart::where('user_id', $user->id)->count();
         $notificationsCount = Notification::where('toUser_id', $user->id)->where('status', 'UNREAD')->count();
+        $favoriteProductsCount = User::where('id', $user->id)->withCount('favoriteProducts')->first();
+        $favoriteShopsCount = User::where('id', $user->id)->withCount('favoriteShops')->first();
+        $favoritesCount = $favoriteProductsCount->favorite_products_count + $favoriteShopsCount->favorite_shops_count;
         return view('editProfile', [
             'user' => $request->user(),
             'categories' => $categories,
             'cartCount' => $cartCount,
-            'notificationsCount' => $notificationsCount
+            'notificationsCount' => $notificationsCount,
+            'favoritesCount' => $favoritesCount
         ]);
     }
 
@@ -37,12 +43,15 @@ class ProfileController extends Controller
         $cart = Cart::where('user_id', $user->id)->with('product')->get();
         $cartCount = Cart::where('user_id', $user->id)->count();
         $notificationsCount = Notification::where('toUser_id', $user->id)->where('status', 'UNREAD')->count();
-
+        $favoriteProductsCount = User::where('id', $user->id)->withCount('favoriteProducts')->first();
+        $favoriteShopsCount = User::where('id', $user->id)->withCount('favoriteShops')->first();
+        $favoritesCount = $favoriteProductsCount->favorite_products_count + $favoriteShopsCount->favorite_shops_count;
         return View('profile', [
             'user' => $request->user(),
             'categories' => $categories,
             'cartCount' =>$cartCount,
-            'notificationsCount' => $notificationsCount
+            'notificationsCount' => $notificationsCount,
+            'favoritesCount' => $favoritesCount
         ]);
     }
     /**

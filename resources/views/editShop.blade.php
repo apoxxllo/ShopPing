@@ -19,15 +19,15 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header" style="color: black;">Setup Shop</div>
+                <div class="card-header" style="color: black;">Edit Shop</div>
 
                 <div class="card-body">
-                    <form method="POST" action="{{ route('setupSeller') }}" enctype="multipart/form-data">
+                    <form method="POST" action="{{ route('editShopPost') }}" enctype="multipart/form-data">
                         @csrf
-
+                        <input type="hidden" name="shopId" hidden readonly value="{{$shop->id}}">
                         <div class="form-group">
                             <label for="shopName">Shop Name</label>
-                            <input type="text" id="shopName" name="shopName" class="form-control" value="{{old('shopName')}}">
+                            <input type="text" id="shopName" name="shopName" class="form-control" value="{{$shop->shopName}}">
                         </div>
 
                         <div class="form-group">
@@ -37,12 +37,12 @@
 
                         <div class="form-group">
                             <label for="address">Address</label>
-                            <textarea id="address" name="address" class="form-control" rows="3" value="{{old('address')}}"></textarea>
+                            <textarea id="address" name="address" class="form-control" rows="3" >{{$shop->address}}</textarea>
                         </div>
 
                         <div class="form-group">
                             <label for="description">Description</label>
-                            <textarea id="description" name="description" class="form-control" rows="3" value="{{old('description')}}"></textarea>
+                            <textarea id="description" name="description" class="form-control" rows="3">{{$shop->description}}</textarea>
                         </div>
                         <!-- Add more fields as needed -->
 

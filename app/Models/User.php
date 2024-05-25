@@ -3,7 +3,12 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Models\Role;
+use App\Models\Shop;
 use App\Models\Order;
+use App\Models\ShopReviews;
+use App\Models\FavoriteShop;
+use App\Models\FavoriteProduct;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -67,4 +72,18 @@ class User extends Authenticatable
         return $this->hasMany(Order::class);
     }
 
+    public function favoriteShops()
+    {
+        return $this->hasMany(FavoriteShop::class);
+    }
+
+    public function favoriteProducts()
+    {
+        return $this->hasMany(FavoriteProduct::class);
+    }
+
+    public function shopReviews()
+    {
+        return $this->hasMany(ShopReviews::class);
+    }
 }

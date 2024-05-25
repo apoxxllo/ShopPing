@@ -1,4 +1,9 @@
-@include('layouts.header', ['categories' => $categories, 'cartCount' => $cartCount, 'notificationsCount' => $notificationsCount])
+@include('layouts.header', [
+    'categories' => $categories,
+    'cartCount' => $cartCount,
+    'notificationsCount' => $notificationsCount,
+    'favoritesCount' => $favoritesCount,
+])
 
 <!-- Carousel Start -->
 <div class="container-fluid mb-3">
@@ -127,7 +132,7 @@
 <div class="container-fluid pt-5 pb-3">
     <h2 class="section-title position-relative text-uppercase mx-xl-5 mb-4"><span class="bg-secondary pr-3">Featured
             Products</span></h2>
-            @if ($featured->isEmpty())
+    @if ($featured->isEmpty())
         <div class="alert alert-warning text-center ml-3 mr-3">
             No products yet
         </div>
@@ -145,8 +150,30 @@
                         <div class="product-action">
                             <a class="btn btn-outline-dark btn-square" href="/productDetails/{{ $product->id }}"><i
                                     class="fa fa-shopping-cart"></i></a>
-                            <a class="btn btn-outline-dark btn-square" href="/favoriteProduct/{{ $product->id }}"><i
-                                    class="far fa-heart"></i></a>
+                                    @auth
+                                    @if (Auth::user()->favoriteProducts->isNotEmpty())
+                                        @php $isFav = false @endphp
+                                        @foreach (Auth::user()->favoriteProducts as $favoriteProduct)
+                                            @if ($favoriteProduct->product->id == $product->id)
+                                                <a class="btn btn-outline-dark btn-square active"
+                                                    href="/favoriteProduct/{{ $product->id }}"><i
+                                                        class="far fa-heart"></i></a>
+                                                @php $isFav = true @endphp
+                                            @break
+                                        @endif
+                                    @endforeach
+                                    @if (!$isFav)
+                                        <a class="btn btn-outline-dark btn-square"
+                                            href="/favoriteProduct/{{ $product->id }}"><i class="far fa-heart"></i></a>
+                                    @endif
+                                @else
+                                    <a class="btn btn-outline-dark btn-square"
+                                        href="/favoriteProduct/{{ $product->id }}"><i class="far fa-heart"></i></a>
+                                @endif
+                            @else
+                                <a class="btn btn-outline-dark btn-square" href="/favoriteProduct/{{ $product->id }}"><i
+                                        class="far fa-heart"></i></a>
+                            @endauth
                             <a class="btn btn-outline-dark btn-square" href="/productDetails/{{ $product->id }}"><i
                                     class="fa fa-search"></i></a>
                         </div>
@@ -158,14 +185,32 @@
                             <h5>Php {{ $product->price }}</h5>
                             <h6 class="text-muted ml-2"><del>{{ $product->price }}</del></h6>
                         </div>
-                        <div class="d-flex align-items-center justify-content-center mb-1">
-                            <small class="fa fa-star text-primary mr-1"></small>
-                            <small class="fa fa-star text-primary mr-1"></small>
-                            <small class="fa fa-star text-primary mr-1"></small>
-                            <small class="fa fa-star text-primary mr-1"></small>
-                            <small class="fa fa-star text-primary mr-1"></small>
-                            <small>(98)</small>
+                        <div class="text-primary mr-2">
+                            @php
+                                $averageRating = $product->reviews->avg('rating'); // Calculate the average rating
+                                $fullStars = floor($averageRating); // Get the number of full stars
+                                $hasHalfStar = $averageRating - $fullStars >= 0.5; // Check if there is a half star
+                            @endphp
+
+                            {{-- Full stars --}}
+                            @for ($i = 0; $i < $fullStars; $i++)
+                                <small class="fas fa-star"></small>
+                            @endfor
+
+                            {{-- Half star --}}
+                            @if ($hasHalfStar)
+                                <small class="fas fa-star-half-alt"></small>
+                                @for ($i = 0; $i < 5 - ceil($averageRating); $i++)
+                                    <small class="far fa-star"></small>
+                                @endfor
+                            @else
+                                {{-- Empty stars --}}
+                                @for ($i = 0; $i < 5 - floor($averageRating); $i++)
+                                    <small class="far fa-star"></small>
+                                @endfor
+                            @endif
                         </div>
+                        <small style="color: black;">({{ $product->reviews_count }})</small>
                     </div>
                 </div>
             </div>
@@ -224,51 +269,94 @@
                         <div class="product-action">
                             <a class="btn btn-outline-dark btn-square" href="/productDetails/{{ $product->id }}"><i
                                     class="fa fa-shopping-cart"></i></a>
+                            @auth
+                                @if (Auth::user()->favoriteProducts->isNotEmpty())
+                                    @php $isFav = false @endphp
+                                    @foreach (Auth::user()->favoriteProducts as $favoriteProduct)
+                                        @if ($favoriteProduct->product->id == $product->id)
+                                            <a class="btn btn-outline-dark btn-square active"
+                                                href="/favoriteProduct/{{ $product->id }}"><i
+                                                    class="far fa-heart"></i></a>
+                                            @php $isFav = true @endphp
+                                        @break
+                                    @endif
+                                @endforeach
+                                @if (!$isFav)
+                                    <a class="btn btn-outline-dark btn-square"
+                                        href="/favoriteProduct/{{ $product->id }}"><i class="far fa-heart"></i></a>
+                                @endif
+                            @else
+                                <a class="btn btn-outline-dark btn-square"
+                                    href="/favoriteProduct/{{ $product->id }}"><i class="far fa-heart"></i></a>
+                            @endif
+                        @else
                             <a class="btn btn-outline-dark btn-square" href="/favoriteProduct/{{ $product->id }}"><i
                                     class="far fa-heart"></i></a>
-                            <a class="btn btn-outline-dark btn-square" href="/productDetails/{{ $product->id }}"><i
-                                    class="fa fa-search"></i></a>
-                        </div>
+                        @endauth
+                        <a class="btn btn-outline-dark btn-square" href="/productDetails/{{ $product->id }}"><i
+                                class="fa fa-search"></i></a>
                     </div>
-                    <div class="text-center py-4">
-                        <a class="h6 text-decoration-none text-truncate"
-                            href="/productDetails/{{ $product->id }}">{{ $product->name }}</a>
-                        <div class="d-flex align-items-center justify-content-center mt-2">
-                            <h5>{{ $product->price }}</h5>
-                            <h6 class="text-muted ml-2"><del>{{ $product->price }}</del></h6>
+                </div>
+                <div class="text-center py-4">
+                    <a class="h6 text-decoration-none text-truncate"
+                        href="/productDetails/{{ $product->id }}">{{ $product->name }}</a>
+                    <div class="d-flex align-items-center justify-content-center mt-2">
+                        <h5>{{ $product->price }}</h5>
+                        <h6 class="text-muted ml-2"><del>{{ $product->price }}</del></h6>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-center mb-1">
+                        <div class="text-primary mr-2">
+                            @php
+                                $averageRating = $product->reviews->avg('rating'); // Calculate the average rating
+                                $fullStars = floor($averageRating); // Get the number of full stars
+                                $hasHalfStar = $averageRating - $fullStars >= 0.5; // Check if there is a half star
+                            @endphp
+
+                            {{-- Full stars --}}
+                            @for ($i = 0; $i < $fullStars; $i++)
+                                <small class="fas fa-star"></small>
+                            @endfor
+
+                            {{-- Half star --}}
+                            @if ($hasHalfStar)
+                                <small class="fas fa-star-half-alt"></small>
+                                @for ($i = 0; $i < 5 - ceil($averageRating); $i++)
+                                    <small class="far fa-star"></small>
+                                @endfor
+                            @else
+                                {{-- Empty stars --}}
+                                @for ($i = 0; $i < 5 - floor($averageRating); $i++)
+                                    <small class="far fa-star"></small>
+                                @endfor
+                            @endif
                         </div>
-                        <div class="d-flex align-items-center justify-content-center mb-1">
-                            <small class="fa fa-star text-primary mr-1"></small>
-                            <small class="fa fa-star text-primary mr-1"></small>
-                            <small class="fa fa-star text-primary mr-1"></small>
-                            <small class="fa fa-star text-primary mr-1"></small>
-                            <small class="fa fa-star text-primary mr-1"></small>
-                            <small>(99)</small>
-                        </div>
+                        <small style="color: black;">({{ $product->reviews_count }})</small>
                     </div>
                 </div>
             </div>
-        @endforeach
+        </div>
+    @endforeach
 
-    </div>
+</div>
 </div>
 <!-- Products End -->
 
 
 <!-- Vendor Start -->
 <div class="container-fluid py-5">
-    <div class="row px-xl-5">
-        <div class="col">
-            <div class="owl-carousel vendor-carousel">
-                @foreach ($shops as $shop)
-                    <a href="/viewShop/{{ $shop->id }}">
-                        <div class="bg-light p-4">
-                            <img src="{{ asset($shop->shopLogo) }}" alt="">
-                        </div>
-                @endforeach
-            </div>
+<div class="row px-xl-5">
+    <div class="col">
+        <div class="owl-carousel vendor-carousel">
+            @foreach ($shops as $shop)
+                <a href="/viewShop/{{ $shop->id }}">
+                    <div class="bg-light p-4">
+                        <img src="{{ asset($shop->shopLogo) }}" alt="">
+                    </div>
+                </a>
+            @endforeach
         </div>
     </div>
+</div>
 </div>
 <!-- Vendor End -->
 

@@ -1,4 +1,4 @@
-@include('layouts.header', ['categories' => $categories, 'cartCount' => $cartCount, 'notificationsCount' => $notificationsCount])
+@include('layouts.header', ['categories' => $categories, 'cartCount' => $cartCount, 'notificationsCount' => $notificationsCount, 'favoritesCount' => $favoritesCount])
 <style>
     .edit-button {
         width: 40px;
@@ -178,7 +178,7 @@
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-md-6 text-center">
-                                            <button class="btn btn-primary btn-block">Order History</button>
+                                            <a href="/orderHistory" class="btn btn-primary btn-block">Order History</a>
                                         </div>
                                         <div class="col-md-6 text-center">
                                             <button class="btn btn-primary btn-block">Pending Orders</button>

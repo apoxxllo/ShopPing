@@ -7,6 +7,7 @@ use App\Models\Shop;
 use App\Models\Order;
 use App\Models\Category;
 use App\Models\ProductImage;
+use App\Models\CustomerReview;
 use App\Models\OrderedProduct;
 use App\Models\FavoriteProduct;
 use Illuminate\Database\Eloquent\Model;
@@ -47,6 +48,10 @@ class Product extends Model
     public function carts()
     {
         return $this->hasMany(Cart::class);
+    }
+    public function reviews()
+    {
+        return $this->hasMany(CustomerReview::class);
     }
 
 

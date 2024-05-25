@@ -17,10 +17,12 @@ class SendOrderMail extends Mailable
      * Create a new message instance.
      */
     public $body;
+    public $header;
 
-    public function __construct($body)
+    public function __construct($header,$body)
     {
         $this->body = $body;
+        $this->header = $header;
     }
 
     /**
@@ -35,13 +37,9 @@ class SendOrderMail extends Mailable
 
     public function build()
     {
-        $imagePath = public_path('img/shopPINGLOGO.png'); // Path to your image file
-        $imageData = file_get_contents($imagePath);
-        $base64Image = base64_encode($imageData);
-
         return $this->view('email')->with([
             'body' => $this->body,
-            'base64Image' => $base64Image
+            'header' => $this->header
         ]);
     }
 
