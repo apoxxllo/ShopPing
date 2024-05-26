@@ -1,4 +1,9 @@
-@include('layouts.header', ['categories' => $categories, 'cartCount' => $cartCount, 'notificationsCount' => $notificationsCount, 'favoritesCount' => $favoritesCount])
+@include('layouts.header', [
+    'categories' => $categories,
+    'cartCount' => $cartCount,
+    'notificationsCount' => $notificationsCount,
+    'favoritesCount' => $favoritesCount,
+])
 <style>
     .edit-button {
         width: 40px;
@@ -156,7 +161,7 @@
                                 </a>
                             </div>
                         @else
-                        <label class="col-md-4 col-form-label text-md-right">You already have a shop!</label>
+                            <label class="col-md-4 col-form-label text-md-right">You already have a shop!</label>
                             <div class="col-md-4">
                                 <a class="btn btn-primary disabled">Subscribe to our premium plan to add more shops!</a>
                             </div>
@@ -177,12 +182,27 @@
                             <div class="card">
                                 <div class="card-body">
                                     <div class="row">
-                                        <div class="col-md-6 text-center">
+                                        <div class="col-md-4 text-center">
                                             <a href="/orderHistory" class="btn btn-primary btn-block">Order History</a>
                                         </div>
-                                        <div class="col-md-6 text-center">
-                                            <button class="btn btn-primary btn-block">Pending Orders</button>
+                                        <div class="col-md-4 text-center">
+                                            <a href="/yourShops" class="btn btn-primary btn-block">Pending Orders</a>
                                         </div>
+                                        @if (!Auth::user()->hasVerifiedEmail())
+                                            <div class="col-md-4 text-center">
+                                                <form id="verify-email-form"
+                                                    action="{{ url('email/verification-notification') }}"
+                                                    method="POST" style="display: inline;">
+                                                    @csrf
+                                                    <button type="submit" class="btn btn-primary btn-block">Verify
+                                                        Email</button>
+                                                </form>
+                                            </div>
+                                        @else
+                                            <div class="col-md-4 text-center">
+                                                <button type="submit" class="btn btn-success btn-block">Email Verified</button>
+                                            </div>
+                                        @endif
                                     </div>
                                 </div>
                             </div>

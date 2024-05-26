@@ -24,7 +24,11 @@ class HomeController extends Controller
         $categories = Category::withCount('products')->get();
         $products = Product::all();
         $recentProducts = Product::latest()->take(4)->withCount('reviews')->get();
-        $featuredProducts = Product::inRandomOrder()->limit(4)->withCount('reviews')->get();
+        $featuredProducts = Product::withCount('favorites')
+        ->withCount('reviews')
+        ->orderBy('favorites_count', 'desc')
+        ->limit(4)
+        ->get();
         $shops = Shop::all();
         $cartCount = 0;
         $notificationsCount = 0;
@@ -45,7 +49,11 @@ class HomeController extends Controller
         // dd($shops);
         $categories = Category::withCount('products')->get();
         $recentProducts = Product::latest()->take(4)->withCount('reviews')->get();
-        $featuredProducts = Product::inRandomOrder()->limit(4)->withCount('reviews')->get();
+        $featuredProducts = Product::withCount('favorites')
+        ->withCount('reviews')
+        ->orderBy('favorites_count', 'desc')
+        ->limit(4)
+        ->get();
         $cartCount = 0;
         $notificationsCount = 0;
         $favoritesCount = 0;
@@ -64,7 +72,11 @@ class HomeController extends Controller
         $shops = $user->shops()->withCount('reviews')->get();
         $categories = Category::withCount('products')->get();
         $recentProducts = Product::latest()->take(4)->withCount('reviews')->get();
-        $featuredProducts = Product::inRandomOrder()->limit(4)->withCount('reviews')->get();
+        $featuredProducts = Product::withCount('favorites')
+        ->withCount('reviews')
+        ->orderBy('favorites_count', 'desc')
+        ->limit(4)
+        ->get();
         $allShops = Shop::all();
         $cartCount = Cart::where('user_id', $user->id)->count();
         $notificationsCount = Notification::where('toUser_id', $user->id)->where('status', 'UNREAD')->count();
@@ -186,7 +198,12 @@ class HomeController extends Controller
         ->get();
         $categories = Category::all();
         $recentProducts = Product::where('category_id', $id)->withCount('reviews')->latest()->take(4)->get();
-        $featured = Product::where('category_id', $id)->inRandomOrder()->withCount('reviews')->limit(4)->get();
+        $featured = Product::where('category_id', $id)
+        ->withCount('favorites')
+        ->withCount('reviews')
+        ->orderBy('favorites_count', 'desc')
+        ->limit(4)
+        ->get();
         $shops = Shop::all();
 
         $user = User::findOrFail(Auth::user()->id);
