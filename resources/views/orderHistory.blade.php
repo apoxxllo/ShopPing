@@ -173,7 +173,7 @@
                                                 </button>
                                             </form>
                                         @elseif ($order->status == 'PENDING')
-                                            <a href="/pingSeller/{{ $order->id }}">
+                                            <a href="/pingSeller/{{ $order->orderNumber }}">
                                                 <button data-text="Awesome" class="buttonpma">
                                                     <span class="actual-text">&nbsp;Ping Seller&nbsp;</span>
                                                     <span class="hover-text" aria-hidden="true">&nbsp;Ping&nbsp;</span>

@@ -150,9 +150,11 @@ class HomeController extends Controller
         // Extract order numbers from the orders collection
         $orderNumbers = $orders->pluck('orderNumber');
         $orderHistoriesData = [];
+        // dd($orders);
         foreach($orders as $order)
         {
             $orderedProducts = OrderedProduct::where('orderNumber', $order->orderNumber)->get();
+            // dd($orderedProducts);
             $orderHistory = new OrderHistory(
                 $order['orderNumber'],
                 $orderedProducts,
@@ -240,8 +242,8 @@ class HomeController extends Controller
         $user = User::findOrFail(Auth::user()->id);
         $cartCount = Cart::where('user_id', $user->id)->count();
         $notificationsCount = Notification::where('toUser_id', $user->id)->where('status', 'UNREAD')->count();
-        $favoriteProducts = FavoriteProduct::where('user_id', $user->id)->get();
-        $favoriteShops = FavoriteShop::where('user_id', $user->id)->get();
+        $favoriteProducts = FavoriteProduct::where('user_id', $user->id)->with(['product.reviews'])->get();
+        $favoriteShops = FavoriteShop::where('user_id', $user->id)->with(['shop.reviews'])->get();
         $favoriteProductsCount = User::where('id', $user->id)->withCount('favoriteProducts')->first();
         $favoriteShopsCount = User::where('id', $user->id)->withCount('favoriteShops')->first();
         $favoritesCount = $favoriteProductsCount->favorite_products_count + $favoriteShopsCount->favorite_shops_count;

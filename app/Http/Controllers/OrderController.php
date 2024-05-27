@@ -84,8 +84,12 @@ class OrderController extends Controller
             'created_at' => $dateTime->format('Y-m-d h:i:s a'),
             'description' => 'Customer ' . $user->username . ' has ordered from your shop ' . $shop->shopName . ', Order#' . $order->id . '. Order Details: ' . $order->details
         ]);
-        $body = 'Seller ' . $user->username . ' has delivered your order, Order#' . $order->id . '. Order Details: ' . $order->details;
+        $body = 'Customer ' . $user->username . ' has ordered from your shop, Order#' . $order->id . '. Order Details: ' . $order->details;
         $header = 'A new order in your shop ' . $shop->shopName . ' by Customer ' . $user->username;
+        Mail::to($shop->user->email)->send(new SendOrderMail($header, $body));
+
+        $body = 'You have successfully placed your order in shop ' . $shop->shopName . '. Order Details: ' . $order->details . ' Total: P' . number_format($total, 2);
+        $header = 'RECEIPT Order#' . $order->orderNumber;
         Mail::to($shop->user->email)->send(new SendOrderMail($header, $body));
 
         return redirect(route('orderHistory'))->with('success', 'Order successfully placed');
@@ -95,8 +99,8 @@ class OrderController extends Controller
     {
         $user = Auth::user();
         $orderProduct = OrderedProduct::where('orderNumber', $id)->first();
-        $order = Order::find($id);
-
+        $order = Order::where('orderNumber', $id)->first();
+        // dd($order);
         $alreadyPinged = Notification::where('orderNumber', $order->orderNumber)->count();
         if($alreadyPinged > 1)
         {
@@ -104,7 +108,7 @@ class OrderController extends Controller
         }
         // Set the timezone to UTC+8
         $dateTime = new DateTime("now", new DateTimeZone("Asia/Shanghai")); // UTC+8 timezone
-
+        // dd($orderProduct);
         $toUserId = $orderProduct->product->shop->user->id;
         $notification = Notification::create([
             'fromUser_id' => $user->id,

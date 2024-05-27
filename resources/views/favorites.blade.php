@@ -52,11 +52,33 @@
                                 {{-- <h6 class="text-muted ml-2"><del>$123.00</del></h6> --}}
                             </div>
                             <div class="d-flex align-items-center justify-content-center mb-1">
-                                <small class="fa fa-star text-primary mr-1"></small>
-                                <small class="fa fa-star text-primary mr-1"></small>
-                                <small class="fa fa-star text-primary mr-1"></small>
-                                <small class="fa fa-star text-primary mr-1"></small>
-                                <small class="fa fa-star text-primary mr-1"></small>
+                                <div class="text-primary mr-2">
+                                    @php
+                                        $averageRating = $product->product->reviews->avg('rating'); // Calculate the average rating
+                                        $fullStars = floor($averageRating); // Get the number of full stars
+                                        $hasHalfStar = $averageRating - $fullStars >= 0.5; // Check if there is a half star
+                                    @endphp
+
+                                    {{-- Full stars --}}
+                                    @for ($i = 0; $i < $fullStars; $i++)
+                                        <small class="fas fa-star"></small>
+                                    @endfor
+
+                                    {{-- Half star --}}
+                                    @if ($hasHalfStar)
+                                        <small class="fas fa-star-half-alt"></small>
+                                        @for ($i = 0; $i < 5 - ceil($averageRating); $i++)
+                                            <small class="far fa-star"></small>
+                                        @endfor
+                                    @else
+                                        {{-- Empty stars --}}
+                                        @for ($i = 0; $i < 5 - floor($averageRating); $i++)
+                                            <small class="far fa-star"></small>
+                                        @endfor
+                                    @endif
+                                </div>
+                                {{-- <small style="color: black;">({{ $product->reviews_count }})</small>
+                                 --}}
                                 {{-- <small>Sales: (99)</small> --}}
                             </div>
                         </div>
@@ -94,11 +116,32 @@
                                 {{-- <h6 class="text-muted ml-2"><del>$123.00</del></h6> --}}
                             </div>
                             <div class="d-flex align-items-center justify-content-center mb-1">
-                                <small class="fa fa-star text-primary mr-1"></small>
-                                <small class="fa fa-star text-primary mr-1"></small>
-                                <small class="fa fa-star text-primary mr-1"></small>
-                                <small class="fa fa-star text-primary mr-1"></small>
-                                <small class="fa fa-star text-primary mr-1"></small>
+                                <div class="text-primary mr-2">
+                                    @php
+                                        $averageRating = $shop->shop->reviews->avg('rating'); // Calculate the average rating
+                                        $fullStars = floor($averageRating); // Get the number of full stars
+                                        $hasHalfStar = $averageRating - $fullStars >= 0.5; // Check if there is a half star
+                                    @endphp
+
+                                    {{-- Full stars --}}
+                                    @for ($i = 0; $i < $fullStars; $i++)
+                                        <small class="fas fa-star"></small>
+                                    @endfor
+
+                                    {{-- Half star --}}
+                                    @if ($hasHalfStar)
+                                        <small class="fas fa-star-half-alt"></small>
+                                        @for ($i = 0; $i < 5 - ceil($averageRating); $i++)
+                                            <small class="far fa-star"></small>
+                                        @endfor
+                                    @else
+                                        {{-- Empty stars --}}
+                                        @for ($i = 0; $i < 5 - floor($averageRating); $i++)
+                                            <small class="far fa-star"></small>
+                                        @endfor
+                                    @endif
+                                </div>
+                                {{-- <small style="color: black;">({{ $product->reviews_count }})</small> --}}
                                 {{-- <small>Sales: (99)</small> --}}
                             </div>
                         </div>
