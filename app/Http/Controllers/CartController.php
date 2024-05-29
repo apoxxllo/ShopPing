@@ -22,6 +22,10 @@ class CartController extends Controller
             }],
         ]);
         $product = Product::findOrFail($request->input('productId'));
+        if($product->stock == 0)
+        {
+            return redirect()->back()->with('error', 'This product is unavailable.');
+        }
         $user = Auth::user();
 
         $cart = Cart::where('user_id', $user->id)->where('product_id',$request->productId)->get();

@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('address');
             $table->string('details');
             $table->string('payment');
-            $table->date('estimateDate')->default(now()->addDays(3)->toDateString());
+            $table->date('estimateDate');
             $table->string('status')->default('pending');
             $table->decimal('total', 10, 2);
             $table->timestamps();

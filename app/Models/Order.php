@@ -17,7 +17,8 @@ class Order extends Model
         'total',
         'address',
         'payment',
-        'status'
+        'status',
+        'estimateDate'
     ];
     public function ordered()
     {

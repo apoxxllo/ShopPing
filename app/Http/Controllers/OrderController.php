@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use DateTime;
 use DateTimeZone;
+use Carbon\Carbon;
 use App\Models\Cart;
 use App\Models\Shop;
 use App\Models\User;
@@ -48,7 +49,6 @@ class OrderController extends Controller
             $shopId = $item->product->shop->id;
         }
 
-
         $order = Order::create([
             'orderNumber' => $nextOrderNumber,
             'user_id' => $validatedData['userId'],
@@ -56,9 +56,11 @@ class OrderController extends Controller
             'address' => $validatedData['address'],
             'payment' => $validatedData['payment'],
             'status' => 'PENDING',
+            'estimateDate' => Carbon::now()->addDays(3)->toDateString(),
             'details' => $details
         ]);
 
+        // dd(Carbon::now()->addDays(3));
         foreach ($cart as $item) {
         for($i = 0; $i < $item->quantity; $i++)
             {
@@ -90,7 +92,7 @@ class OrderController extends Controller
 
         $body = 'You have successfully placed your order in shop ' . $shop->shopName . '. Order Details: ' . $order->details . ' Total: P' . number_format($total, 2);
         $header = 'RECEIPT Order#' . $order->orderNumber;
-        Mail::to($shop->user->email)->send(new SendOrderMail($header, $body));
+        Mail::to($user->email)->send(new SendOrderMail($header, $body));
 
         return redirect(route('orderHistory'))->with('success', 'Order successfully placed');
     }
